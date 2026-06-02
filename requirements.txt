@@ -1,0 +1,4 @@
+pandas
+folium
+mkdocs
+mkdocs-material

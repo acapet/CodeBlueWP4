@@ -2,7 +2,7 @@
 
 site_name: CodeBlue Station Network
 theme:
-  name: material
+  name: mkdocs
 
 nav:
   - Home: index.md
