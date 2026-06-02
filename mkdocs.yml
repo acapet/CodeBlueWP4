@@ -1,6 +1,7 @@
 # mkdocs.yml
 
-site_name: CodeBlue Station Network
+site_name: CodeBlue WP4
+site_url: https://acapet.github.io/CodeBlueWP4/
 theme:
   name: mkdocs
 
