@@ -1,0 +1,9 @@
+# mkdocs.yml
+
+site_name: CodeBlue Station Network
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Stations: stations.md
