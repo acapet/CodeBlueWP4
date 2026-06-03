@@ -5,7 +5,7 @@ import folium
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATA_PATH = BASE_DIR / "data" / "stations.csv"
 OUTPUT_PATH = BASE_DIR / "docs" / "maps" / "stations_map.html"
 
