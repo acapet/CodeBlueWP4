@@ -21,15 +21,19 @@ The filenames are structured as \<STATION\>\_\<SCENARIO\>\_\<YEAR\>\_\<MODEL\>.n
 
 At this stage, a common list of variables has not been defined. Also, since storage shouldn't be an issue for these files, the files should inlcude all model output variables saved during the simulations, at native time resolution. 
 
-## Station list
+## Stations
 
 The files are processed automatically based on a central list of stations. The station list is contained in a .csv file in the github repository, and generated automatically from the file named 'Monitoring_Stations_Merged.xls' on the CodeBlue shared drive (WP4 folder).
+
+### Station map
 
 For information purposes an interactive map can be found here:
 
 [Station Map](maps/stations_map.html)
 
 If spotting an error, please report the requested correction on the shared file directly, in the sheet named *correction log sheet*.
+
+### Station list
 
 --8<-- "tables/stations_table.md"
 

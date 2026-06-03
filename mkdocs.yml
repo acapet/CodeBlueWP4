@@ -6,8 +6,8 @@ theme:
   name: mkdocs
 
 markdown_extensions:
-  - pymdownx.snippets
-  
+  - pymdownx.snippets:
+      base_path: docs
 nav:
   - Home: index.md
   - Annual indicators : indicators.md
