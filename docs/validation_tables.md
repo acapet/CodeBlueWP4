@@ -20,13 +20,13 @@ A tabular format is preferred to efficiently store the large number of observati
 
 Recommended filenames are structured as:
 
-`CBVAL_<MODEL>_<SCENARIO>_<YEAR>.csv`
+`<VARIABLE>_<YEAR>_<SCENARIO>_<MODEL>.csv`
 
 ## Observation sources
 
 Validation observations are predefined and extracted from reference observational datasets.
-
-The current validation workflow is based on queries to the ICES database. Observation datasets are therefore fixed a priori to ensure consistency across participating models.
+The current validation workflow is based on queries to the ICES database.
+Observation datasets are therefore fixed a priori to ensure consistency across participating models.
 
 ## Variables
 
@@ -34,7 +34,6 @@ The validation tables currently include the following variables:
 
 | Variable     | Unit       |
 | ------------ | ---------- |
-| Secchi depth | m          |
 | Oxygen       | mmol.O₂/m³ |
 | NOx          | mmol.N/m³  |
 | NH₄          | mmol.N/m³  |
@@ -43,6 +42,7 @@ The validation tables currently include the following variables:
 | Chlorophyll  | mg Chl/m³  |
 | Temperature  | °C         |
 | Salinity     | psu        |
+| Secchi depth | m          |
 
 Additional variables may be included if required by specific validation exercises.
 

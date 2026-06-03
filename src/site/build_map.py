@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = BASE_DIR / "data" / "stations.csv"
-OUTPUT_PATH = BASE_DIR / "outputs" / "stations_map.html"
+OUTPUT_PATH = BASE_DIR / "docs" / "maps" / "stations_map.html"
 
 def rgb_to_hex(rgb_tuple):
     return '#%02x%02x%02x' % tuple(
