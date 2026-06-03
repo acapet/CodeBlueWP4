@@ -138,10 +138,11 @@
 <p><strong>Validation Tables</strong> are tabular files containing collocated observations and model values.</p>
 <p>A tabular format is preferred to efficiently store the large number of observation-model pairs while preserving all information required for subsequent analyses.</p>
 <p>Recommended filenames are structured as:</p>
-<p><code>CBVAL_&lt;MODEL&gt;_&lt;SCENARIO&gt;_&lt;YEAR&gt;.csv</code></p>
+<p><code>&lt;VARIABLE&gt;_&lt;YEAR&gt;_&lt;SCENARIO&gt;_&lt;MODEL&gt;.csv</code></p>
 <h2 id="observation-sources">Observation sources</h2>
-<p>Validation observations are predefined and extracted from reference observational datasets.</p>
-<p>The current validation workflow is based on queries to the ICES database. Observation datasets are therefore fixed a priori to ensure consistency across participating models.</p>
+<p>Validation observations are predefined and extracted from reference observational datasets.
+The current validation workflow is based on queries to the ICES database.
+Observation datasets are therefore fixed a priori to ensure consistency across participating models.</p>
 <h2 id="variables">Variables</h2>
 <p>The validation tables currently include the following variables:</p>
 <table>
@@ -152,10 +153,6 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Secchi depth</td>
-<td>m</td>
-</tr>
 <tr>
 <td>Oxygen</td>
 <td>mmol.O₂/m³</td>
@@ -187,6 +184,10 @@
 <tr>
 <td>Salinity</td>
 <td>psu</td>
+</tr>
+<tr>
+<td>Secchi depth</td>
+<td>m</td>
 </tr>
 </tbody>
 </table>
