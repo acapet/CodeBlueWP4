@@ -31,6 +31,8 @@ For information purposes an interactive map can be found here:
 
 If spotting an error, please report the requested correction on the shared file directly, in the sheet named *correction log sheet*.
 
+--8<-- "tables/stations_table.md"
+
 ## Example file
 
 Here's the structure of the example file W04_H1_2010_RBINS.nc

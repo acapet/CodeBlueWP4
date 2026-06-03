@@ -5,6 +5,9 @@ site_url: https://acapet.github.io/CodeBlueWP4/
 theme:
   name: mkdocs
 
+markdown_extensions:
+  - pymdownx.snippets
+  
 nav:
   - Home: index.md
   - Annual indicators : indicators.md

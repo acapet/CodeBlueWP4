@@ -77,6 +77,12 @@ This approach enables:
 * Recalculation of validation statistics without rerunning model simulations.
 * Future refinement of model weighting and ensemble methodologies.
 
+## Scripts
+
+Related scripts are located in ./scr/validation/
+
+
+
 ## Example file
 
 ..TO BE COMPLETED..
