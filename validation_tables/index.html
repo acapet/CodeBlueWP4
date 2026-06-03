@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        <link rel="canonical" href="https://acapet.github.io/CodeBlueWP4/stations/">
+        <link rel="canonical" href="https://acapet.github.io/CodeBlueWP4/validation_tables/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Stations - CodeBlue WP4</title>
+        <title>Validation tables - CodeBlue WP4</title>
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -45,11 +45,11 @@
                             <li class="navitem">
                                 <a href="../daily_layers/" class="nav-link">Daily layers</a>
                             </li>
-                            <li class="navitem active">
-                                <a href="./" class="nav-link">Stations</a>
-                            </li>
                             <li class="navitem">
-                                <a href="../validation_tables/" class="nav-link">Validation tables</a>
+                                <a href="../stations/" class="nav-link">Stations</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Validation tables</a>
                             </li>
                         </ul>
 
@@ -60,12 +60,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../daily_layers/" class="nav-link">
+                                <a rel="prev" href="../stations/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../validation_tables/" class="nav-link">
+                                <a rel="next" class="nav-link disabled">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -87,7 +87,7 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-light">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#stations" class="nav-link">Stations</a>
+            <li class="nav-item" data-level="1"><a href="#validation-tables" class="nav-link">Validation Tables</a>
               <ul class="nav flex-column">
             <li class="nav-item" data-level="2"><a href="#purposes" class="nav-link">Purposes</a>
               <ul class="nav flex-column">
@@ -97,11 +97,19 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-level="2"><a href="#observation-sources" class="nav-link">Observation sources</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-level="2"><a href="#variables" class="nav-link">Variables</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#station-list" class="nav-link">Station list</a>
+            <li class="nav-item" data-level="2"><a href="#table-structure" class="nav-link">Table structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#methodological-considerations" class="nav-link">Methodological considerations</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -116,28 +124,123 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="stations">Stations</h1>
-<p>The <strong>Stations files</strong> consists of vertical profiles at fixed positions. </p>
+<h1 id="validation-tables">Validation Tables</h1>
+<p>The <strong>Validation Tables</strong> contain paired model and observation values used for the evaluation of model performance against in-situ measurements.</p>
 <h2 id="purposes">Purposes</h2>
-<p><strong>Stations files</strong> addresses two main purposes:</p>
+<p><strong>Validation Tables</strong> address three main purposes:</p>
 <ol>
-<li>Enable time series comparison with established monitoring stations from the OSPAR and HELCOM monitoring networks.  </li>
-<li>Provide boundary conditions for local studies (WP6).</li>
+<li>Enable direct comparison between model outputs and observational data.</li>
+<li>Support the computation of validation and skill assessment metrics.</li>
+<li>Preserve the full granularity of validation data for future analyses, alternative skill metrics, and model weighting methodologies.</li>
 </ol>
-<p>Whereas the two objectives are clearly distinct, they are treated jointly because they share the same data format.</p>
+<p>Rather than storing only aggregated validation statistics, the validation tables retain individual observation-model pairs, allowing validation methods to be refined and recomputed as needed.</p>
 <h2 id="format">Format</h2>
-<p><strong>Stations files</strong> are netcdf files with dimensions <em>time</em> and <em>depth</em>. </p>
-<p>The filenames are structured as \&lt;STATION>_\&lt;SCENARIO>_\&lt;YEAR>_\&lt;MODEL>.nc.</p>
+<p><strong>Validation Tables</strong> are tabular files containing collocated observations and model values.</p>
+<p>A tabular format is preferred to efficiently store the large number of observation-model pairs while preserving all information required for subsequent analyses.</p>
+<p>Recommended filenames are structured as:</p>
+<p><code>CBVAL_&lt;MODEL&gt;_&lt;SCENARIO&gt;_&lt;YEAR&gt;.csv</code></p>
+<h2 id="observation-sources">Observation sources</h2>
+<p>Validation observations are predefined and extracted from reference observational datasets.</p>
+<p>The current validation workflow is based on queries to the ICES database. Observation datasets are therefore fixed a priori to ensure consistency across participating models.</p>
 <h2 id="variables">Variables</h2>
-<p>At this stage, a common list of variables has not been defined. Also, since storage shouldn't be an issue for these files, the files should inlcude all model output variables saved during the simulations, at native time resolution. </p>
-<h2 id="station-list">Station list</h2>
-<p>The files are processed automatically based on a central list of stations. The station list is contained in a .csv file in the github repository, and generated automatically from the file named 'Monitoring_Stations_Merged.xls' on the CodeBlue shared drive (WP4 folder).</p>
-<p>For information purposes an interactive map can be found here:</p>
-<p><a href="../maps/stations_map.html">Station Map</a></p>
-<p>If spotting an error, please report the requested correction on the shared file directly, in the sheet named <em>correction log sheet</em>.</p>
+<p>The validation tables currently include the following variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secchi depth</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Oxygen</td>
+<td>mmol.O₂/m³</td>
+</tr>
+<tr>
+<td>NOx</td>
+<td>mmol.N/m³</td>
+</tr>
+<tr>
+<td>NH₄</td>
+<td>mmol.N/m³</td>
+</tr>
+<tr>
+<td>PO₄</td>
+<td>mmol.P/m³</td>
+</tr>
+<tr>
+<td>SiO</td>
+<td>mmol.Si/m³</td>
+</tr>
+<tr>
+<td>Chlorophyll</td>
+<td>mg Chl/m³</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>°C</td>
+</tr>
+<tr>
+<td>Salinity</td>
+<td>psu</td>
+</tr>
+</tbody>
+</table>
+<p>Additional variables may be included if required by specific validation exercises.</p>
+<h2 id="table-structure">Table structure</h2>
+<p>Each record corresponds to a single observation and its associated model value.</p>
+<p>The expected table structure is:</p>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>Variable</th>
+<th>Depth</th>
+<th>Lon</th>
+<th>Lat</th>
+<th>Date</th>
+<th>Obs. Value</th>
+<th>Mod. Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<p>Where:</p>
+<ul>
+<li><strong>Model Name</strong> identifies the model simulation.</li>
+<li><strong>Variable</strong> identifies the observed quantity.</li>
+<li><strong>Depth</strong> is the observation depth.</li>
+<li><strong>Lon</strong> and <strong>Lat</strong> provide the observation location.</li>
+<li><strong>Date</strong> corresponds to the observation timestamp.</li>
+<li><strong>Obs. Value</strong> is the observed measurement.</li>
+<li><strong>Mod. Value</strong> is the corresponding model value extracted at the same location, depth, and time.</li>
+</ul>
+<h2 id="methodological-considerations">Methodological considerations</h2>
+<p>The validation tables are intended to preserve the highest possible level of detail while limiting storage requirements compared with full three-dimensional model outputs.</p>
+<p>This approach enables:</p>
+<ul>
+<li>Computation of standard validation metrics.</li>
+<li>Development of alternative skill assessment methods.</li>
+<li>Recalculation of validation statistics without rerunning model simulations.</li>
+<li>Future refinement of model weighting and ensemble methodologies.</li>
+</ul>
 <h2 id="example-file">Example file</h2>
-<p>Here's the structure of the example file W04_H1_2010_RBINS.nc</p>
-<p>..TO BE COMPLETED.. </p></div>
+<p>..TO BE COMPLETED..</p></div>
             </div>
         </div>
 
