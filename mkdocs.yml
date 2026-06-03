@@ -7,4 +7,8 @@ theme:
 
 nav:
   - Home: index.md
+  - Annual indicators : indicators.md
+  - Monthly layers: monthly_layers.md
+  - Daily layers: daily_layers.md
   - Stations: stations.md
+  - Validation tables : validation_tables.md
