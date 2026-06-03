@@ -87,8 +87,36 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-light">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#interactive-map" class="nav-link">Interactive Map</a>
+            <li class="nav-item" data-level="1"><a href="#indicators" class="nav-link">Indicators</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#purposes" class="nav-link">Purposes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#format" class="nav-link">Format</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#indicator-definitions" class="nav-link">Indicator definitions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#aggregation-procedures" class="nav-link">Aggregation procedures</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#output-structure" class="nav-link">Output structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#methodological-considerations" class="nav-link">Methodological considerations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#example-file" class="nav-link">Example file</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -96,11 +124,142 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="interactive-map">Interactive Map</h1>
-<p>The station map is generated automatically from the file named '' on the CodeBlue shared drive, WP4 folder.</p>
-<p>👉 Open the interactive map here:</p>
-<p><a href="../maps/stations_map.html">Station Map</a></p>
-<p>If spotting an error, report on the correction log sheet of the shared file directly. </p></div>
+<h1 id="indicators">Indicators</h1>
+<p>The <strong>Indicators files</strong> contain annually aggregated reporting indicators computed from model outputs for predefined OSPAR and HELCOM assessment regions.</p>
+<h2 id="purposes">Purposes</h2>
+<p>The main purpose of the <strong>Indicators files</strong> is to store HELCOM and OSPAR core indicators for comparison across models, scenarios, and years, in order to facilitate regional assessments and post-processing activities within the CodeBlue project.</p>
+<p>The indicators are diagnostics derived from model outputs through prescribed spatial, temporal, and vertical aggregation procedures. Each indicator consists of a single value per assessment region, model, scenario, and year.</p>
+<h2 id="format">Format</h2>
+<p><strong>Indicators files</strong> are structured tabular files containing annual indicator values aggregated at the assessment-region scale.</p>
+<p>The recommended filenames are structured as:</p>
+<p><code>CBIND_&lt;MODEL&gt;_&lt;SCENARIO&gt;_&lt;YEAR&gt;.csv</code></p>
+<p>The use of structured <code>.csv</code> files is preferred over spreadsheet formats to facilitate automated processing and management of the large number of expected files.</p>
+<h2 id="indicator-definitions">Indicator definitions</h2>
+<p>The reporting indicators currently include established HELCOM and OSPAR core indicators together with several region-specific indicators. Indicator calculations follow predefined temporal and vertical aggregation protocols.</p>
+<p>The current list includes:</p>
+<p><strong>TODO</strong> : Make a corresponding .csv file with units, etc .. + Generate the following MD table from the .csv.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Indicator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A1</td>
+<td>Winter DIN</td>
+</tr>
+<tr>
+<td>A2</td>
+<td>Winter DIP</td>
+</tr>
+<tr>
+<td>A3</td>
+<td>Annual Total N</td>
+</tr>
+<tr>
+<td>A4</td>
+<td>Annual Total P</td>
+</tr>
+<tr>
+<td>A5</td>
+<td>Summer Chlorophyll (March–September)</td>
+</tr>
+<tr>
+<td>A6</td>
+<td>Summer Chlorophyll (June–September)</td>
+</tr>
+<tr>
+<td>A8</td>
+<td>Summer Secchi Depth (March–September)</td>
+</tr>
+<tr>
+<td>A9</td>
+<td>Summer Secchi Depth (June–September)</td>
+</tr>
+<tr>
+<td>A10</td>
+<td>Near-bed Oxygen During Stratified Period</td>
+</tr>
+</tbody>
+</table>
+<p>Detailed aggregation rules, units, and indicator definitions are described in D4.1.</p>
+<h2 id="aggregation-procedures">Aggregation procedures</h2>
+<p>Indicators are calculated through successive aggregation steps:</p>
+<ol>
+<li>Spatial aggregation within predefined OSPAR and HELCOM assessment regions.</li>
+<li>Vertical aggregation according to the indicator-specific protocol.</li>
+<li>Temporal aggregation according to the prescribed reporting period.</li>
+</ol>
+<p>Depth aggregation operations should always be completed before temporal aggregation operations.</p>
+<p>For regions where OSPAR and HELCOM assessment areas overlap (e.g. Kattegat), indicators should be reported for both regional frameworks.</p>
+<h2 id="output-structure">Output structure</h2>
+<p>Each file contains one annual value for each reporting indicator and assessment region.</p>
+<p>The general structure is:</p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>OSPAR Region 1</th>
+<th>...</th>
+<th>OSPAR Region N</th>
+<th>HELCOM Region 1</th>
+<th>...</th>
+<th>HELCOM Region N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>A2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>...</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>An</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Indicator values should include the prescribed statistical summaries (e.g. mean and standard deviation) where required by the reporting protocol.</p>
+<h2 id="methodological-considerations">Methodological considerations</h2>
+<p>Several HELCOM and OSPAR indicators remain under active methodological development. In particular, chlorophyll- and oxygen-based indicators may be subject to ongoing discussions regarding their exact computation procedures.</p>
+<p>To support these activities, monthly and daily output layers are retained separately, allowing:</p>
+<ul>
+<li>Application of existing indicator computation guidelines.</li>
+<li>Evaluation of alternative indicator definitions.</li>
+<li>Comparison of methodological approaches across models and regions.</li>
+</ul>
+<p>The role of CodeBlue is to document and support these methodological discussions rather than to prescribe final indicator definitions in advance.</p>
+<h2 id="example-file">Example file</h2>
+<p>..TO BE COMPLETED..</p></div>
             </div>
         </div>
 
