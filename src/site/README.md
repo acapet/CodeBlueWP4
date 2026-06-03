@@ -1,1 +1,1 @@
-Scripts to build content displayed on the webpage.
+Scripts to build the content displayed on the webpage.
