@@ -79,9 +79,9 @@ This approach enables:
 
 ## Scripts
 
+![Validation workflow](figs/validation_diag.svg)
+
 Related scripts are located in ./scr/validation/
-
-
 
 ## Example file
 
