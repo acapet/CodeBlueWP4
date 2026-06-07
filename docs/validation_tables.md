@@ -20,7 +20,7 @@ A tabular format is preferred to efficiently store the large number of observati
 
 Recommended filenames are structured as:
 
-`VALID_<VARIABLE>_<YEAR>_<SCENARIO>_<MODEL>.csv`
+`VALID_<VARIABLE>_<YEAR>_<MODEL>.csv`
 
 ## Observation sources
 
