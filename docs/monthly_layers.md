@@ -28,46 +28,9 @@ The monthly output files contain a predefined set of two-dimensional variables o
 
 The current list includes:
 
-| ID     | Variable                                         |
-| ------ | ------------------------------------------------ |
-| M1     | Surface salinity                                 |
-| M2     | Average salinity                                 |
-| M3     | Bottom salinity                                  |
-| M4     | Surface temperature                              |
-| M5     | Average temperature                              |
-| M6     | Bottom temperature                               |
-| M7     | Potential energy anomaly – thermal component     |
-| M8     | Potential energy anomaly – haline component      |
-| M9     | Mixed layer depth                                |
-| M10    | Surface DIN                                      |
-| M11    | Surface DIP                                      |
-| M12    | Surface Si                                       |
-| M13    | Total N                                          |
-| M14    | Total P                                          |
-| M15    | Chlorophyll                                      |
-| M16    | Total phytoplankton biomass                      |
-| M16a–n | Individual phytoplankton functional type biomass |
-| M17    | Total zooplankton biomass                        |
-| M18    | Pelagic detrital organic carbon                  |
-| M19    | Dissolved inorganic carbon (DIC)                 |
-| M20    | Benthic detrital organic carbon                  |
-| M21    | Net primary production                           |
-| M22    | Benthic carbon fluxes (particulate)              |
-| M23    | Benthic carbon fluxes (dissolved)                |
-| M24    | Atmospheric carbon fluxes                        |
-| M25    | Near-bottom oxygen                               |
-| M26    | Benthic oxygen fluxes                            |
-| M27    | Atmospheric oxygen fluxes                        |
-| M28    | Secchi depth                                     |
-| M29    | Suspended particulate matter                     |
-| M30    | Surface pH                                       |
-| M31    | Surface DIC                                      |
-| M32    | Surface alkalinity                               |
-| M33    | Bottom pH                                        |
-| M34    | Bottom DIC                                       |
-| M35    | Bottom alkalinity                                |
+--8<-- "tables/monthly_table.md"
 
-The complete list of variables, units, and aggregation procedures is maintained in the CodeBlue reporting specifications.
+Specific diagnsotics marked with an asterisk '*' in the table are detailed below. 
 
 ## Aggregation procedures
 
@@ -101,7 +64,7 @@ Potential Energy Anomaly (PEA, $\Phi$) is used as a measure of water column stra
 Following Holt et al. (2005), PEA is defined such that:
 
 $$
-\Phi = - \frac{g}{H} \int\limits_{z=-H}^{0} z\cdot (\rho(T,S) - \rho(\overbar{T},\overbar{S}))
+\Phi = - \frac{g}{H} \int\limits_{z=-H}^{0} z\cdot (\rho(T,S) - \rho(\overline{T},\overline{S})) dz
 $$
 
 , where : 
@@ -109,14 +72,14 @@ $$
 * $g$ is gravitional accelaration, 
 * $H$ is the water depth, 
 * $\rho(T,S)$ is the seawater density deriving from [TEOS-10](https://www.teos-10.org/) standard formulaes.
-* $\overbar{T}$ represents the depth-averaged temperature.
+* $\overline{T}$ represents the depth-averaged temperature.
 
 $\Phi$ is defined such that it is positive under stably stratified conditions and approach zero under vertically mixed conditions.
 
 Both thermal and haline components should be reported separately:
 
 $$
-\Phi_T = - \frac{g}{H} \int\limits_{z=-H}^{0} z\cdot (\rho(T,\overbar{S}) - \rho(\overbar{T},\overbar{S}))
+\Phi_T = - \frac{g}{H} \int\limits_{z=-H}^{0} z\cdot (\rho(T,\overline{S}) - \rho(\overline{T},\overline{S})) dz
 $$
 
 $$

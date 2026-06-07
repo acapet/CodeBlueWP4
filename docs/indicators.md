@@ -24,19 +24,7 @@ The reporting indicators currently include established HELCOM and OSPAR core ind
 
 The current list includes:
 
-**TODO** : Make a corresponding .csv file with units, etc .. + Generate the following MD table from the .csv.
-
-| ID  | Indicator                                |
-| --- | ---------------------------------------- |
-| A1  | Winter DIN                               |
-| A2  | Winter DIP                               |
-| A3  | Annual Total N                           |
-| A4  | Annual Total P                           |
-| A5  | Summer Chlorophyll (March–September)     |
-| A6  | Summer Chlorophyll (June–September)      |
-| A8  | Summer Secchi Depth (March–September)    |
-| A9  | Summer Secchi Depth (June–September)     |
-| A10 | Near-bed Oxygen During Stratified Period |
+--8<-- "tables/indicators_table.md"
 
 Detailed aggregation rules, units, and indicator definitions are described in D4.1.
 

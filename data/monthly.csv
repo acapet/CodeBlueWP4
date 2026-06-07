@@ -1,0 +1,39 @@
+ID,Name,Unit,Depth range,Depth operation,Time range,Time operation
+M1,surface salinity,psu,0-10 m,mean,monthly,mean
+M2,avg salinity,psu,whole water column,mean,monthly,mean
+M3,bottom salinity,psu,0-10 m above seabed,mean,monthly,mean
+M4,surface temperature,celsius,0-10 m,mean,monthly,mean
+M5,average temperature,celsius,whole column,mean,monthly,mean
+M6,bottom temperature,celsius,0-10 m above seabed,mean,monthly,mean
+M7,potential energy anomaly - thermal component,J/m³,*,/,monthly,mean
+M8,potential energy anomaly - haline component,J/m³,*,/,monthly,mean
+M9,mixed layer depth,m,*,/,monthly,mean
+M10,surface DIN,mmol.N/m³,0-10 m,mean,monthly,mean
+M11,surface DIP,mmol.P/m³,0-10 m,mean,monthly,mean
+M12,surface Si,mmol.Si/m³,0-10 m,mean,monthly,mean
+M13,total N,mmol.N/m³,0-10 m,mean,monthly,mean
+M14,total P,mmol.P/m³,0-10 m,mean,monthly,mean
+M15,Chl,mg.Chl/m³,0-10 m,mean,monthly,mean
+M16,total phyto biomass,mmol.C/m²,whole column,integrated,monthly,mean
+M16a,Total Phy1 biomass,mmol.C/m²,whole column,integrated,monthly,mean
+M16b,Total Phy2 biomass,mmol.C/m²,whole column,integrated,monthly,mean
+..,".. etc, for all PFTs",mmol.C/m²,whole column,integrated,monthly,mean
+M17,total zooplankton biomass,mmol.C/m²,whole column,integrated,monthly,mean
+M18,Pelagic detritic OC,mmol.C/m²,whole column,integrated,monthly,mean
+M19,DIC,mmol.C/m²,whole column,integrated,monthly,mean
+M20,Benthic detritic OC,mmol.C/m²,/,/,monthly,mean
+M21,net primary production,mmol.C/m²/d,whole column,integrated,monthly,mean
+M22,benthic C fluxes (part.),mmol.C/m²/d,/,/,monthly,mean
+M23,benthic C fluxes (diss.),mmol.C/m²/d,/,/,monthly,mean
+M24,atmospheric C fluxes,mmol.C/m²/d,/,/,monthly,mean
+M25,O2,mmol.O2/m³,0-10 m above seabed,mean,monthly,mean
+M26,benthic O2 fluxes,mmol.O2/m2/d,/,/,monthly,mean
+M27,atmospheric O2 fluxes,mmol.O2/m2/d,/,/,monthly,mean
+M28,secchi depth,m,*,/,monthly,mean
+M29,Suspended particulate matter,mg/l,whole column,integrated,monthly,mean
+M30,Surface pH,Total Scale,Surface layer,/,monthly,mean
+M31,Surface DIC,mol/m³,Surface layer,/,monthly,mean
+M32,Surface Alkalinity,mol/m³,Surface layer,/,monthly,mean
+M33,Bottom pH,Total Scale,Bottom Layer,/,monthly,mean
+M34,Bottom DIC,mol/m³,Bottom Layer,/,monthly,mean
+M35,Bottom Alkalinity,mol/m³,Bottom Layer,/,monthly,mean

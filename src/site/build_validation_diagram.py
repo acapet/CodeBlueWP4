@@ -21,8 +21,12 @@ with g.subgraph(name="cluster_wp4") as c:
 
 with g.subgraph(name="cluster_shared") as c:
     c.attr(label="Code Blue shared space")
-    c.node("STRUCT", "ICES_<VAR>_<YEAR>.parquet")
-    c.node("CSV", "<VAR>_<YEAR>_<MODEL>.csv")
+    with c.subgraph(name="ICES") as c2:
+        c2.attr(label="ICES In-situ data", shape="folder")
+        c2.node("STRUCT", "ICES_<VAR>_<YEAR>.parquet")
+    with c.subgraph(name="CBF") as c3:
+        c3.attr(label="Code Blue Files", shape="folder")
+        c3.node("CSV", "VALID_<VAR>_<YEAR>_<MODEL>.csv")
 
 with g.subgraph(name="cluster_partner") as c:
     c.attr(label="Code Blue partner")

@@ -1,0 +1,10 @@
+ID,Name,Unit,Depth range,Depth operation,Time range,Time operation,Core indicator HELCOM,Core indicator OSPAR
+A1,winter DIN,mmol.N/m³,0-10 m,mean,dec-feb,Mean+Std,Yes,Yes
+A2,winter DIP,mmol.P/m³,0-10 m,mean,dec-feb,Mean+Std,Yes,Yes
+A3,annual total N,mmol.N/m³,0-10 m,mean,annual,Mean+Std,Yes,Regional
+A4,annual total P,mmol.P/m³,0-10 m,mean,annual,Mean+Std,Yes,Regional
+A5,summer Chl 1,mg.Chl/m³,0-10 m,mean,mar-sep,Mean+Std,,Yes
+A6,summer Chl 2,mg.Chl/m³,0-10 m,mean,jun-sep,Mean+Std,Yes,
+A8,summer Secchi depth 1,m,Identification of Secchi depth,Identification of Secchi depth,mar-sep,Mean+Std,,Regional
+A9,summer Secchi depth 2,m,Identification of Secchi depth,Identification of Secchi depth,jun-sep,Mean+Std,Yes,
+A10,nearbed oxygen in stratified period,mmol.O2/m³,0-10 m above seabed,mean of lowest 5th percentile of data,jul-oct,Mean+Std,,Yes

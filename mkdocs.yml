@@ -3,11 +3,18 @@
 site_name: CodeBlue WP4
 site_url: https://acapet.github.io/CodeBlueWP4/
 theme:
-  name: mkdocs
+  name: material
 
 markdown_extensions:
   - pymdownx.snippets:
       base_path: docs
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+
 nav:
   - Home: index.md
   - Annual indicators : indicators.md
