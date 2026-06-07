@@ -1,0 +1,43 @@
+model:
+  name: COHERENS
+
+files:
+  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos2_1/{year}/NoS_1.tsout3.nc"
+  insitudatadir: "/home/bel9956/proj_codeblue/data/validation/"
+
+coordinates:
+  time: time
+  lon: lon
+  lat: lat
+  depth: depth
+  vertical: lev
+
+derived_variables:
+  chl:
+    expression: "chlsc + chlnsc"
+
+variables:
+
+  oxy:
+    model_name: o2
+    conversion: 22.3914      # 1000/44.66
+
+  nox:
+    model_name: no3
+    conversion: 1000
+
+  nh4:
+    model_name: nh4
+    conversion: 1000
+
+  chl:
+    model_name: chl
+    conversion: 1
+
+  po4:
+    model_name: po4
+    conversion: 1000
+
+  sio:
+    model_name: sio
+    conversion: 1000
