@@ -1,0 +1,20 @@
+name: codeblueWP4
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - xarray
+  - dask
+  - scipy
+  - netcdf4
+  - pyarrow
+  - pyyaml
+  - matplotlib
+  - cartopy
+  - cmocean
+  - folium
+  
