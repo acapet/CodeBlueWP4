@@ -87,8 +87,40 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-light">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#monthly-data-layers" class="nav-link">Monthly data layers</a>
+            <li class="nav-item" data-level="1"><a href="#monthly-layers" class="nav-link">Monthly Layers</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#purposes" class="nav-link">Purposes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#format" class="nav-link">Format</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#variables" class="nav-link">Variables</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#aggregation-procedures" class="nav-link">Aggregation procedures</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#vertical-integration" class="nav-link">Vertical integration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#specific-diagnostics" class="nav-link">Specific diagnostics</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#output-structure" class="nav-link">Output structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#example-file" class="nav-link">Example file</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -96,8 +128,247 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="monthly-data-layers">Monthly data layers</h1>
-<p>TO BE COMPLETED</p></div>
+<h1 id="monthly-layers">Monthly Layers</h1>
+<p>The <strong>Monthly Layers</strong> files contain monthly aggregated two-dimensional fields derived from model outputs at native horizontal resolution.</p>
+<h2 id="purposes">Purposes</h2>
+<p><strong>Monthly Layers</strong> address three main purposes:</p>
+<ol>
+<li>Support the scientific analyses and research questions of the CodeBlue project.</li>
+<li>Provide the information required to develop and evaluate candidate HELCOM and OSPAR indicators.</li>
+<li>Enable the reconstruction of harmonized pan-European data layers across all participating modelling systems.</li>
+</ol>
+<p>Compared with the annual indicators, monthly layers retain a lower level of aggregation and preserve the full horizontal resolution of each model. This allows detailed analyses while maintaining manageable storage requirements.</p>
+<h2 id="format">Format</h2>
+<p><strong>Monthly Layers</strong> are NetCDF files containing monthly mean values of vertically aggregated variables.</p>
+<p>The native horizontal grid of each model is retained. To ensure interoperability between modelling systems, all files should follow common CF conventions and metadata standards.</p>
+<p>Recommended filenames are structured as:</p>
+<p><code>MONTHLY_&lt;SCENARIO&gt;_&lt;YEAR&gt;_&lt;MODEL&gt;.nc</code></p>
+<h2 id="variables">Variables</h2>
+<p>The monthly output files contain a predefined set of two-dimensional variables obtained through vertical averaging or integration procedures.</p>
+<p>The current list includes:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td>Surface salinity</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>Average salinity</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>Bottom salinity</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>Surface temperature</td>
+</tr>
+<tr>
+<td>M5</td>
+<td>Average temperature</td>
+</tr>
+<tr>
+<td>M6</td>
+<td>Bottom temperature</td>
+</tr>
+<tr>
+<td>M7</td>
+<td>Potential energy anomaly – thermal component</td>
+</tr>
+<tr>
+<td>M8</td>
+<td>Potential energy anomaly – haline component</td>
+</tr>
+<tr>
+<td>M9</td>
+<td>Mixed layer depth</td>
+</tr>
+<tr>
+<td>M10</td>
+<td>Surface DIN</td>
+</tr>
+<tr>
+<td>M11</td>
+<td>Surface DIP</td>
+</tr>
+<tr>
+<td>M12</td>
+<td>Surface Si</td>
+</tr>
+<tr>
+<td>M13</td>
+<td>Total N</td>
+</tr>
+<tr>
+<td>M14</td>
+<td>Total P</td>
+</tr>
+<tr>
+<td>M15</td>
+<td>Chlorophyll</td>
+</tr>
+<tr>
+<td>M16</td>
+<td>Total phytoplankton biomass</td>
+</tr>
+<tr>
+<td>M16a–n</td>
+<td>Individual phytoplankton functional type biomass</td>
+</tr>
+<tr>
+<td>M17</td>
+<td>Total zooplankton biomass</td>
+</tr>
+<tr>
+<td>M18</td>
+<td>Pelagic detrital organic carbon</td>
+</tr>
+<tr>
+<td>M19</td>
+<td>Dissolved inorganic carbon (DIC)</td>
+</tr>
+<tr>
+<td>M20</td>
+<td>Benthic detrital organic carbon</td>
+</tr>
+<tr>
+<td>M21</td>
+<td>Net primary production</td>
+</tr>
+<tr>
+<td>M22</td>
+<td>Benthic carbon fluxes (particulate)</td>
+</tr>
+<tr>
+<td>M23</td>
+<td>Benthic carbon fluxes (dissolved)</td>
+</tr>
+<tr>
+<td>M24</td>
+<td>Atmospheric carbon fluxes</td>
+</tr>
+<tr>
+<td>M25</td>
+<td>Near-bottom oxygen</td>
+</tr>
+<tr>
+<td>M26</td>
+<td>Benthic oxygen fluxes</td>
+</tr>
+<tr>
+<td>M27</td>
+<td>Atmospheric oxygen fluxes</td>
+</tr>
+<tr>
+<td>M28</td>
+<td>Secchi depth</td>
+</tr>
+<tr>
+<td>M29</td>
+<td>Suspended particulate matter</td>
+</tr>
+<tr>
+<td>M30</td>
+<td>Surface pH</td>
+</tr>
+<tr>
+<td>M31</td>
+<td>Surface DIC</td>
+</tr>
+<tr>
+<td>M32</td>
+<td>Surface alkalinity</td>
+</tr>
+<tr>
+<td>M33</td>
+<td>Bottom pH</td>
+</tr>
+<tr>
+<td>M34</td>
+<td>Bottom DIC</td>
+</tr>
+<tr>
+<td>M35</td>
+<td>Bottom alkalinity</td>
+</tr>
+</tbody>
+</table>
+<p>The complete list of variables, units, and aggregation procedures is maintained in the CodeBlue reporting specifications.</p>
+<h2 id="aggregation-procedures">Aggregation procedures</h2>
+<p>All variables are reported as monthly means after applying the prescribed vertical aggregation.</p>
+<p>Typical vertical aggregation methods include:</p>
+<ul>
+<li>Mean concentration within the upper 10 m.</li>
+<li>Mean concentration within the lower 10 m above the seabed.</li>
+<li>Mean concentration over the entire water column.</li>
+<li>Vertical integration over the entire water column.</li>
+</ul>
+<p>Monthly averaging is applied after the vertical aggregation step.</p>
+<h2 id="vertical-integration">Vertical integration</h2>
+<p>Differences in vertical discretization between models can complicate the calculation of vertically integrated quantities.</p>
+<p>To ensure consistency across modelling systems, the recommended procedure is:</p>
+<ol>
+<li>Interpolate model outputs from the native vertical grid onto a regular 1 m vertical grid using linear interpolation.</li>
+<li>Apply the required vertical averaging or integration on the interpolated profiles.</li>
+<li>Compute the monthly mean from the resulting daily or instantaneous values.</li>
+</ol>
+<h2 id="specific-diagnostics">Specific diagnostics</h2>
+<h3 id="potential-energy-anomaly">Potential energy anomaly</h3>
+<p>Potential Energy Anomaly (PEA, $\Phi$) is used as a measure of water column stratification.</p>
+<p>Following Holt et al. (2005), PEA is defined such that:</p>
+<p>$$
+\Phi = - \frac{g}{H} \int\limits_{z=-H}^{0} z\cdot (\rho(T,S) - \rho(\overbar{T},\overbar{S}))
+$$</p>
+<p>, where : </p>
+<ul>
+<li>$g$ is gravitional accelaration, </li>
+<li>$H$ is the water depth, </li>
+<li>$\rho(T,S)$ is the seawater density deriving from <a href="https://www.teos-10.org/">TEOS-10</a> standard formulaes.</li>
+<li>$\overbar{T}$ represents the depth-averaged temperature.</li>
+</ul>
+<p>$\Phi$ is defined such that it is positive under stably stratified conditions and approach zero under vertically mixed conditions.</p>
+<p>Both thermal and haline components should be reported separately:</p>
+<p>$$
+\Phi_T = - \frac{g}{H} \int\limits_{z=-H}^{0} z\cdot (\rho(T,\overbar{S}) - \rho(\overbar{T},\overbar{S}))
+$$</p>
+<p>$$
+\Phi_S = \Phi - \Phi_T
+$$</p>
+<h3 id="mixed-layer-depth">Mixed layer depth</h3>
+<p>Mixed Layer Depth (MLD) follows the density-based definition commonly used in NEMO.</p>
+<p>The mixed layer depth is defined as the shallowest depth at which the density difference relative to a reference depth exceeds a specified threshold.</p>
+<p>The recommended parameters are:</p>
+<ul>
+<li>$z_{ref}$ : Reference depth: 3 m</li>
+<li>$\Delta \rho_{ref}$ : Density difference threshold, 0.03 kg m⁻³</li>
+</ul>
+<p>This corresponds to the depth where:</p>
+<p>$$
+z_{MLD} = min(z) | \rho(z)- \rho(z_{ref}) &gt; \Delta \rho_{ref}
+$$</p>
+<h3 id="secchi-depth">Secchi depth</h3>
+<p>Secchi depth is derived from the photosynthetically active radiation (PAR) attenuation coefficient.</p>
+<p>The recommended definition is:</p>
+<p>$$
+ z_{secchi} = \frac{1}{K_d}
+$$</p>
+<p>where:</p>
+<ul>
+<li>$z_{secchi}$ is the Secchi depth.</li>
+<li>$K_d$ is the PAR attenuation coefficient.</li>
+</ul>
+<h2 id="output-structure">Output structure</h2>
+<p>Each file contains monthly fields for all requested variables on the native horizontal grid of the model.</p>
+<p>The files should include all metadata necessary to ensure compliance with CF conventions and facilitate automated processing by downstream workflows.</p>
+<h2 id="example-file">Example file</h2>
+<p>..TO BE COMPLETED..</p></div>
             </div>
         </div>
 
