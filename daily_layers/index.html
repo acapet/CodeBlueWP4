@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#monthly-data-layers" class="md-skip">
+        <a href="#daily-layers" class="md-skip">
           Skip to content
         </a>
       
@@ -288,6 +288,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Daily layers
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -304,6 +322,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purposes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purposes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregation-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation procedures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baltic-sea-specific-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baltic Sea specific variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixed-layer-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixed Layer Depth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example file
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -383,6 +508,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purposes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purposes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregation-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation procedures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baltic-sea-specific-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baltic Sea specific variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixed-layer-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixed Layer Depth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example file
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -398,8 +619,144 @@
 
 
 
-<h1 id="monthly-data-layers">Monthly data layers</h1>
-<p>TO BE COMPLETED</p>
+<h1 id="daily-layers">Daily Layers</h1>
+<p>The <strong>Daily Layers</strong> files contain daily aggregated fields intended to support the development and evaluation of indicators requiring high temporal resolution.</p>
+<h2 id="purposes">Purposes</h2>
+<p><strong>Daily Layers</strong> address three main purposes:</p>
+<ol>
+<li>Support indicators requiring flexible temporal aggregation periods.</li>
+<li>Enable the calculation of indicators based on threshold exceedances, event duration, or bloom phenology.</li>
+<li>Provide the temporal resolution necessary to investigate ecosystem dynamics that cannot be adequately captured by monthly averages.</li>
+</ol>
+<p>Compared with the monthly layers, daily outputs retain a finer temporal resolution while maintaining full spatial resolution. Due to the associated storage requirements, daily outputs are restricted to a limited set of variables.</p>
+<h2 id="format">Format</h2>
+<p><strong>Daily Layers</strong> are NetCDF files containing daily mean values at native model horizontal resolution.</p>
+<p>The native horizontal grid of each model is retained. To ensure interoperability between modelling systems, all files should follow common CF conventions and metadata standards.</p>
+<p>The filenames are structured as:</p>
+<p><code>DAILY_&lt;SCENARIO&gt;_&lt;YEAR&gt;_&lt;MODEL&gt;.nc</code></p>
+<h2 id="variables">Variables</h2>
+<p>The daily output files contain the following variables:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Variable</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>Chlorophyll (optical depth average)</td>
+<td>mg Chl/m³</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>Chlorophyll (water-column integrated)</td>
+<td>mg Chl/m²</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>DIN</td>
+<td>mol/m³</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>DIP</td>
+<td>mol/m³</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>Silicate</td>
+<td>mol/m³</td>
+</tr>
+<tr>
+<td>D6*</td>
+<td>Cyanobacteria</td>
+<td>mg Chl/m³</td>
+</tr>
+<tr>
+<td>D7*</td>
+<td>Oxygen (3D field)</td>
+<td>mmol O₂/m³</td>
+</tr>
+<tr>
+<td>D8*</td>
+<td>Temperature (3D field)</td>
+<td>°C</td>
+</tr>
+<tr>
+<td>D9*</td>
+<td>Salinity (3D field)</td>
+<td>psu</td>
+</tr>
+<tr>
+<td>D10*</td>
+<td>Hydrogen sulphide (H₂S)</td>
+<td>mmol/m³</td>
+</tr>
+<tr>
+<td>D11*</td>
+<td>Ammonium (NH₄)</td>
+<td>mmol/m³</td>
+</tr>
+<tr>
+<td>D12*</td>
+<td>Sea surface height</td>
+<td>m</td>
+</tr>
+<tr>
+<td>D13</td>
+<td>Near-bottom oxygen</td>
+<td>mmol O₂/m³</td>
+</tr>
+<tr>
+<td>D14</td>
+<td>Near-bottom temperature</td>
+<td>°C</td>
+</tr>
+<tr>
+<td>D15</td>
+<td>Near-bottom salinity</td>
+<td>psu</td>
+</tr>
+<tr>
+<td>D16</td>
+<td>Mixed layer depth</td>
+<td>m</td>
+</tr>
+<tr>
+<td>D17</td>
+<td>Surface temperature</td>
+<td>°C</td>
+</tr>
+<tr>
+<td>D18</td>
+<td>Bottom temperature</td>
+<td>°C</td>
+</tr>
+</tbody>
+</table>
+<p>Variables marked with an asterisk (*) are only requested from models extending over the Baltic Sea. These variables constitute an exception to the general requirement of vertically aggregated outputs and may include full three-dimensional fields.</p>
+<h2 id="aggregation-procedures">Aggregation procedures</h2>
+<p>Most daily variables are reported as vertically aggregated two-dimensional fields.</p>
+<p>Typical aggregation methods include:</p>
+<ul>
+<li>Mean concentration within the optical depth.</li>
+<li>Mean concentration within the lower 10 m above the seabed.</li>
+<li>Vertical integration over the full water column.</li>
+</ul>
+<p>Daily values correspond to daily means computed from the native model output frequency.</p>
+<h2 id="baltic-sea-specific-variables">Baltic Sea specific variables</h2>
+<p>The Baltic Sea presents specific ecological and biogeochemical characteristics that require dedicated outputs.</p>
+<p>For this reason, variables D6–D12 are only requested from models extending over the Baltic Sea. These variables support the development and assessment of Baltic Sea specific indicators, particularly those related to cyanobacterial blooms, deep-water oxygen depletion, and hypoxia.</p>
+<h2 id="mixed-layer-depth">Mixed Layer Depth</h2>
+<p>Mixed Layer Depth (MLD) follows the same definition as adopted for the monthly layer products.</p>
+<h2 id="output-structure">Output structure</h2>
+<p>Each file contains daily fields for all requested variables on the native model grid.</p>
+<p>Variables should be stored using CF-compliant metadata and naming conventions to facilitate automated processing and intercomparison across modelling systems.</p>
+<h2 id="example-file">Example file</h2>
+<p>..TO BE COMPLETED..</p>
 
 
 
