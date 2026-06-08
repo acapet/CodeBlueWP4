@@ -14,7 +14,7 @@ The indicators are diagnostics derived from model outputs through prescribed spa
 
 The recommended filenames are structured as:
 
-`CBIND_<MODEL>_<SCENARIO>_<YEAR>.csv`
+`IND_<MODEL>_<SCENARIO>_<YEAR>.csv`
 
 The use of structured `.csv` files is preferred over spreadsheet formats to facilitate automated processing and management of the large number of expected files.
 

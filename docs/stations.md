@@ -15,7 +15,7 @@ Whereas the two objectives are clearly distinct, they are treated jointly becaus
 
 **Stations files** are netcdf files with dimensions *time* and *depth*. 
 
-The filenames are structured as \<STATION\>\_\<SCENARIO\>\_\<YEAR\>\_\<MODEL\>.nc.
+The filenames are structured as `STATION_<STATION>_<SCENARIO>_<YEAR>_<MODEL>.nc`.
 
 ## Variables
 

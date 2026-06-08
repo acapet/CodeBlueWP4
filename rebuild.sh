@@ -10,10 +10,19 @@ git add docs/tables/indicators_table.md
 python3 ./src/site/build_indicator_table.py
 git add docs/tables/indicators_table.md
 
+# # # # #
+
 python3 ./src/site/build_validation_diagram.py
-git add docs/diagrams/validation_diagram.png
+git add docs/figs/validation_diagram.png
+
+python3 ./src/site/build_general_diagram.py
+git add docs/figs/general_diagram.png
+
+# # # # #
 
 git commit -m "Update site content"
 git push
+
+# # # # #
 
 mkdocs gh-deploy

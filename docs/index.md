@@ -1,3 +1,3 @@
 # Code Blue WP4 - Model output harmonization tool box
 
-UNDER WORK
+![Workflow](figs/general_diag.svg)
