@@ -25,7 +25,7 @@ Recommended filenames are structured as:
 ## Observation sources
 
 Validation observations are predefined and extracted from reference observational datasets.
-The current validation workflow is based on queries to the ICES database.
+The current validation workflow is based on queries to the ICES database (downloaded and available in the CodeBlue/WP4 Google Drive from 19XX to 20XX).
 Observation datasets are therefore fixed a priori to ensure consistency across participating models.
 
 ## Variables
