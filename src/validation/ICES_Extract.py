@@ -82,13 +82,13 @@ for var in vars:
     dfl =pd.read_parquet(fname)
     if verbose : print(dfl.columns)
 
-    # TO BE DELETED WHEN THE ISSUE OF HAVING DEPTH INTHE SINLGE YEAR FILE IS SOLVED.#
-    fname2 = cfg["files"]["insitudatadir"]+'%s_%s.parquet'%(var,"2010_2015")
-    if verbose: print('reading %s'%fname2)
-    dfl2 =pd.read_parquet(fname2)
-    if verbose : print(dfl2.columns)
-    dfl=dfl2
-    # # # # # # ## # # #  # # # #  ## 
+#    # TO BE DELETED WHEN THE ISSUE OF HAVING DEPTH INTHE SINLGE YEAR FILE IS SOLVED.#
+#    fname2 = cfg["files"]["insitudatadir"]+'%s_%s.parquet'%(var,"2010_2015")
+#    if verbose: print('reading %s'%fname2)
+#    dfl2 =pd.read_parquet(fname2)
+#    if verbose : print(dfl2.columns)
+#    dfl=dfl2
+#    # # # # # # ## # # #  # # # #  ## 
     
     ## This shouldn't be needed ... 
     dflt=dfl[dfl['datetime'].dt.year == modyear]

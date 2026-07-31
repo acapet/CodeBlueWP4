@@ -2,9 +2,9 @@ model:
   name: COHERENS
 
 files:
-  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos2_1/{year}/NoS_1.tsout3.nc"
+  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/{year}/NoS_1.tsout3.nc"
   insitudatadir: "/home/bel9956/proj_codeblue/data/validation/"
-  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos2_1/"
+  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/"
   
 coordinates:
   time: time
@@ -13,8 +13,8 @@ coordinates:
   vertical: lev
 
 derived_variables:
-#  chl:
-#    expression: "chlsc + chlnsc"
+  chl:
+    expression: "chlsc + chlnsc"
   z:
     expression: " lev * depth "
 
