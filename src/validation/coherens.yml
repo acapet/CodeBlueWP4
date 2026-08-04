@@ -1,17 +1,21 @@
+# Ajust your model name
 model:
-  name: COHERENS
-
-files:
-  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/{year}/NoS_1.tsout3.nc"
-  insitudatadir: "/home/bel9956/proj_codeblue/data/validation/"
-  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/"
+  name: COHERENS 
   
+# Ajust your paths
+files:
+  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/{year}/NoS_1.tsout3.nc" # Model output
+  insitudatadir: "/hpcperm/bel9956/codeblue/ICESData_for_validation" # ICES data
+  outdir: "/hpcperm/bel9956/codeblue/validation/" # Final tabular validations tables
+
+# Ajust your model's coordinate names
 coordinates:
   time: time
   lon: lon
   lat: lat
   vertical: lev
 
+# Ajust your model's variable names and (if necessary) the assoctiated conversion factor
 derived_variables:
   chl:
     expression: "chlsc + chlnsc"
@@ -19,26 +23,35 @@ derived_variables:
     expression: " lev * depth "
 
 variables:
-  oxy:
+  oxy: #[ml/l]
     model_name: o2
-    conversion: 22.3914      # 1000/44.66
+    conversion: 22.3914  # 1000/44.66
 
-  nox:
+  nox: #[µmol/l]
     model_name: no3
     conversion: 1000
 
-  nh4:
+  nh4: #[µmol/l]
     model_name: nh4
     conversion: 1000
 
-  chl:
+  chl: #[µg/l]
     model_name: chl
     conversion: 1
 
-  po4:
+  po4: #[µmol/l]
     model_name: po4
     conversion: 1000
 
-  sio:
+  sio: #[µmol/l]
     model_name: sio
     conversion: 1000
+    
+  temp: #[°C]
+    model_name: temp
+    conversion: 1
+    
+  sal: #[-]
+    model_name: sal
+    conversion: 1
+  

@@ -13,5 +13,5 @@ module load conda
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate codeblueWP4
 
-python3 ICES_Extract.py -v $MOD $YEAR 
+python3 Extract_validation_tables.py -v $MOD $YEAR 
 

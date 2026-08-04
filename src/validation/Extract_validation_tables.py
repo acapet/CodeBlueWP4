@@ -1,3 +1,22 @@
+# Script to extract corresponding model output values and add it into existing ICES data tabular files (.parquet)
+# => VALIDATION TABLES
+
+# Input file format: {model}.yaml
+# Output file format: VALID_{var}_{year}_{model}.parquet
+
+# The following script links your model output file with the ICES in situ data tabular files. 
+# It adds a column with the model value corresponding to each existing data in you domain.
+# In {model}.yaml, you need to adapt:
+# - your model name
+# - the paths to your model output, place where you store ICES data .parquet files, place you want to store the final
+#    validation .parquet files.
+# - your model specification: corresponding variable names, coordinate names, conversion factor
+
+# THIS SCRIPT CAN BE RUN VIA: python3 Extract_validation_tables.py -v $MOD $YEAR
+
+# Authors: Capet A. & Denis P.
+###################################################################################################################
+
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -73,7 +92,7 @@ model_lat_max = float(xmod[lat_dim].max())
 
 # This should contain the full list of validation variables
 #TODO: interface with validation.csv .. if needed
-vars=['oxy','nox','nh4','po4','sio','chl']
+vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal']
 
 for var in vars:
     # Shaping local in situ dataframe   
@@ -81,14 +100,6 @@ for var in vars:
     if verbose: print('reading %s'%fname)
     dfl =pd.read_parquet(fname)
     if verbose : print(dfl.columns)
-
-#    # TO BE DELETED WHEN THE ISSUE OF HAVING DEPTH INTHE SINLGE YEAR FILE IS SOLVED.#
-#    fname2 = cfg["files"]["insitudatadir"]+'%s_%s.parquet'%(var,"2010_2015")
-#    if verbose: print('reading %s'%fname2)
-#    dfl2 =pd.read_parquet(fname2)
-#    if verbose : print(dfl2.columns)
-#    dfl=dfl2
-#    # # # # # # ## # # #  # # # #  ## 
     
     ## This shouldn't be needed ... 
     dflt=dfl[dfl['datetime'].dt.year == modyear]
