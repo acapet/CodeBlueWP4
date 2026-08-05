@@ -5,7 +5,7 @@ model:
 # Ajust your paths
 files:
   pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/{year}/NoS_1.tsout3.nc" # Model output
-  insitudatadir: "/hpcperm/bel9956/codeblue/ICESData_for_validation" # ICES data
+  insitudatadir: "/hpcperm/bel9956/codeblue/ICESData_for_validation/" # ICES data
   outdir: "/hpcperm/bel9956/codeblue/validation/" # Final tabular validations tables
 
 # Ajust your model's coordinate names
