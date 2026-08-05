@@ -20,29 +20,29 @@ A tabular format is preferred to efficiently store the large number of observati
 
 Recommended filenames are structured as:
 
-`VALID_<VARIABLE>_<YEAR>_<MODEL>.csv`
+`VALID_<VARIABLE>_<YEAR>_<MODEL>.parquet`
 
 ## Observation sources
 
 Validation observations are predefined and extracted from reference observational datasets.
-The current validation workflow is based on queries to the ICES database (downloaded and available in the CodeBlue/WP4 Google Drive from 19XX to 20XX).
-Observation datasets are therefore fixed a priori to ensure consistency across participating models.
+The current validation workflow is based on queries to the ICES database. 
+Observation datasets are therefore fixed a priori to ensure consistency across participating models. ICES data have been downloaded via: https://data.ices.dk/view-map. Dataset: Ocean hydrochemistry/Bottle and Low Resolution CTD Data.
 
 ## Variables
 
 The validation tables currently include the following variables:
 
-| Variable     | Unit       |
-| ------------ | ---------- |
-| Oxygen       | mmol.O₂/m³ |
-| NOx          | mmol.N/m³  |
-| NH₄          | mmol.N/m³  |
-| PO₄          | mmol.P/m³  |
-| SiO          | mmol.Si/m³ |
-| Chlorophyll  | mg Chl/m³  |
-| Temperature  | °C         |
-| Salinity     | psu        |
-| Secchi depth | m          |
+| Variable     | Unit       | Data Unit | Abr.|
+| ------------ | ---------- | --------- | --- |
+| Oxygen       | mmol.O₂/m³ | ml/l      | oxy |
+| NOx          | mmol.N/m³  | µmol/l    | nox |
+| NH₄          | mmol.N/m³  | µmol/l    | nh4 |
+| PO₄          | mmol.P/m³  | µmol/l    | po4 |
+| SiO          | mmol.Si/m³ | µmol/l    | sio |
+| Chlorophyll  | mg Chl/m³  | µg/l      | chl |
+| Temperature  | °C         | °C        | temp|
+| Salinity     | psu        | psu       | sal |
+| Secchi depth | m          | m         | sec |
 
 Additional variables may be included if required by specific validation exercises.
 
@@ -77,12 +77,19 @@ This approach enables:
 * Recalculation of validation statistics without rerunning model simulations.
 * Future refinement of model weighting and ensemble methodologies.
 
-## Scripts
+## Workflow and scripts
+
+Related scripts are located in ./scr/validation/  
 
 ![Validation workflow](figs/validation_diag.svg)
 
-Related scripts are located in ./scr/validation/
+The suggested workflow is as follows:
+1. Download ICES data: **DONE** for the all CodeBlue domain for the period 1960-2025 (_expect Secci depth for now_). 
+2. Transform data into .parquet tabular files (1 file per variable per year): **DONE**. Everything is available in the Drive folder: `WP4/ICESData_for_validation`
+3. Create the <model>.yaml file (an example is available `coherens.yaml`) and adapt following your model’s specifications.
+4. Execute the script `Extract_validation_table.py` to add the Mod.Value column to the parquet files and create the final **validation tables** (1 file per variable per year per model)
 
 ## Example file
 
-..TO BE COMPLETED..
+Exemple of a validation table file (model: coherens, year: 2010, variable: chl) is available in `./scr/validation/VALID_chl_2010_coherens.parquet`  
+Example of script if you want to play with your validation tables and see what the validation looks like, per regions (bias, RMSD, correlation, Taylor diagrams,...): `Postproc_validation_tables.ipynb` 
