@@ -15,20 +15,20 @@ with g.subgraph(name="cluster_wp4") as c:
     c.attr(label="CodeBlue WP4 Github")
     with c.subgraph(name="cluster_scripts") as c2:
         c2.attr(label="scr/validation/")
-        c2.node("PARQUET", "ICES_to_parquet.py")
-        c2.node("EXTRACT", "ICES_extract.py")
+        c2.node("PARQUET", "ICES_to_parquet.ipynb")
+        c2.node("EXTRACT", "Extract_validation_tables.py")
 
 with g.subgraph(name="cluster_shared") as c:
-    c.attr(label="Code Blue shared space")
+    c.attr(label="CodeBlue shared space")
     with c.subgraph(name="cluster_icesfolder") as c2:
         c2.attr(label="Formatted ICES In-situ data")
-        c2.node("STRUCT", "ICES_<VAR>_<YEAR>.parquet", shape="cylinder")
+        c2.node("STRUCT", "<VAR>_<YEAR>.parquet", shape="cylinder")
     with c.subgraph(name="cluster_CBF") as c3:
-        c3.attr(label="Code Blue Files", shape="folder")
-        c3.node("CSV", "VALID_<VAR>_<YEAR>_<MODEL>.csv", shape="cylinder")
+        c3.attr(label="CodeBlue Files", shape="folder")
+        c3.node("CSV", "VALID_<VAR>_<YEAR>_<MODEL>.parquet", shape="cylinder")
 
 with g.subgraph(name="cluster_partner") as c:
-    c.attr(label="Code Blue partner")
+    c.attr(label="CodeBlue partner")
     c.node("SIM", "1 year simulation", shape="cylinder")
 
 g.edges([

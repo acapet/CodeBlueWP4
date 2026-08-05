@@ -700,7 +700,7 @@ Observation datasets are therefore fixed a priori to ensure consistency across p
 <td>Secchi depth</td>
 <td>m</td>
 <td>m</td>
-<td>sec</td>
+<td>sec?</td>
 </tr>
 </tbody>
 </table>
@@ -754,16 +754,16 @@ Observation datasets are therefore fixed a priori to ensure consistency across p
 <li>Future refinement of model weighting and ensemble methodologies.</li>
 </ul>
 <h2 id="workflow-and-scripts">Workflow and scripts</h2>
-<p>Related scripts are located in ./scr/validation/  </p>
+<p>Related scripts are located in <code>./scr/validation/</code>  </p>
 <p><img alt="Validation workflow" src="../figs/validation_diag.svg" /></p>
-<p>The suggested workflow is as follows:
-1. Download ICES data: <strong>DONE</strong> for the all CodeBlue domain for the period 1960-2025 (<em>expect Secci depth for now</em>). 
-2. Transform data into .parquet tabular files (1 file per variable per year): <strong>DONE</strong>. Everything is available in the Drive folder: <code>WP4/ICESData_for_validation</code>
-3. Create the <model>.yaml file (an example is available <code>coherens.yaml</code>) and adapt following your model’s specifications.
+<p>The suggested workflow is as follows:<br />
+1. Download ICES data: <strong>DONE</strong> for the all CodeBlue domain for the period 1960-2025 (<em>expect Secci depth for now</em>). <br />
+2. Transform data into .parquet tabular files (1 file per variable per year): <strong>DONE</strong>. Everything is available in the Drive folder: <code>WP4/ICESData_for_validation</code><br />
+3. Create the <code>model.yaml</code> file (an example is available <code>coherens.yaml</code>) and adapt following your model’s specifications.<br />
 4. Execute the script <code>Extract_validation_table.py</code> to add the Mod.Value column to the parquet files and create the final <strong>validation tables</strong> (1 file per variable per year per model)</p>
 <h2 id="example-file">Example file</h2>
-<p>Exemple of a validation table file (model: coherens, year: 2010, variable: chl) is available in <code>./scr/validation/VALID_chl_2010_coherens.parquet</code><br />
-Example of script if you want to play with your validation tables and see what the validation looks like, per regions (bias, RMSD, correlation, Taylor diagrams,...): <code>Postproc_validation_tables.ipynb</code> </p>
+<p>Exemple of a validation table file (model: coherens, year: 2010, variable: chl) is available: <code>./scr/validation/VALID_chl_2010_coherens.parquet</code><br />
+Example of script if you want to play with your validation tables and see what the validation looks like, per regions (bias, RMSD, correlation, Taylor diagrams,...): <code>./scr/validation/Postproc_validation_tables.ipynb</code> </p>
 
 
 

@@ -7,7 +7,7 @@
 set -euo pipefail
 
 MOD=coherens
-YEAR=2010
+YEAR=2012
 
 module load conda
 source "$(conda info --base)/etc/profile.d/conda.sh"

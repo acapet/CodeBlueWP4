@@ -84,9 +84,10 @@ Related scripts are located in `./scr/validation/`
 ![Validation workflow](figs/validation_diag.svg)
 
 The suggested workflow is as follows:  
+
 1. Download ICES data: **DONE** for the all CodeBlue domain for the period 1960-2025 (_expect Secci depth for now_).   
 2. Transform data into .parquet tabular files (1 file per variable per year): **DONE**. Everything is available in the Drive folder: `WP4/ICESData_for_validation`  
-3. Create the `model.yaml` file (an example is available `coherens.yaml`) and adapt following your model’s specifications.  
+3. Create the `model.yaml` file (an example is available for `coherens.yaml`) and adapt following your model’s specifications.  
 4. Execute the script `Extract_validation_table.py` to add the Mod.Value column to the parquet files and create the final **validation tables** (1 file per variable per year per model)
 
 ## Example file
