@@ -42,7 +42,7 @@ The validation tables currently include the following variables:
 | Chlorophyll  | mg Chl/m³  | µg/l      | chl |
 | Temperature  | °C         | °C        | temp|
 | Salinity     | psu        | psu       | sal |
-| Secchi depth | m          | m         | sec |
+| Secchi depth | m          | m         | sec?|
 
 Additional variables may be included if required by specific validation exercises.
 
@@ -86,10 +86,10 @@ Related scripts are located in `./scr/validation/`
 The suggested workflow is as follows:  
 1. Download ICES data: **DONE** for the all CodeBlue domain for the period 1960-2025 (_expect Secci depth for now_).   
 2. Transform data into .parquet tabular files (1 file per variable per year): **DONE**. Everything is available in the Drive folder: `WP4/ICESData_for_validation`  
-3. Create the <model>.yaml file (an example is available `coherens.yaml`) and adapt following your model’s specifications.  
+3. Create the `model.yaml` file (an example is available `coherens.yaml`) and adapt following your model’s specifications.  
 4. Execute the script `Extract_validation_table.py` to add the Mod.Value column to the parquet files and create the final **validation tables** (1 file per variable per year per model)
 
 ## Example file
 
-Exemple of a validation table file (model: coherens, year: 2010, variable: chl) is available in `./scr/validation/VALID_chl_2010_coherens.parquet`  
+Exemple of a validation table file (model: coherens, year: 2010, variable: chl) is available: `./scr/validation/VALID_chl_2010_coherens.parquet`  
 Example of script if you want to play with your validation tables and see what the validation looks like, per regions (bias, RMSD, correlation, Taylor diagrams,...): `./scr/validation/Postproc_validation_tables.ipynb` 
