@@ -19,6 +19,8 @@ coordinates:
 derived_variables:
   chl:
     expression: "chlsc + chlnsc"
+  secchi:
+    expression: "1 / paratt0"
   z:
     expression: " lev * depth "
 

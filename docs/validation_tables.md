@@ -20,7 +20,7 @@ A tabular format is preferred to efficiently store the large number of observati
 
 Recommended filenames are structured as:
 
-`VALID_<VARIABLE>_<YEAR>_<MODEL>.parquet`
+`VALID_<VAR>_<YEAR>_<MODEL>.parquet`
 
 ## Observation sources
 
@@ -32,7 +32,7 @@ Observation datasets are therefore fixed a priori to ensure consistency across p
 
 The validation tables currently include the following variables:
 
-| Variable     | Unit       | Data Unit | Abr.|
+| Variable     | Unit       | Data Unit | VAR |
 | ------------ | ---------- | --------- | --- |
 | Oxygen       | mmol.O₂/m³ | ml/l      | oxy |
 | NOx          | mmol.N/m³  | µmol/l    | nox |
@@ -42,7 +42,7 @@ The validation tables currently include the following variables:
 | Chlorophyll  | mg Chl/m³  | µg/l      | chl |
 | Temperature  | °C         | °C        | temp|
 | Salinity     | psu        | psu       | sal |
-| Secchi depth | m          | m         | sec?|
+| Secchi depth | m          | m         | secchi|
 
 Additional variables may be included if required by specific validation exercises.
 
@@ -85,8 +85,8 @@ Related scripts are located in `./scr/validation/`
 
 The suggested workflow is as follows:  
 
-1. Download ICES data: **DONE** for the all CodeBlue domain for the period 1960-2025 (_expect Secci depth for now_).   
-2. Transform data into .parquet tabular files (1 file per variable per year): **DONE**. Everything is available in the Drive folder: `WP4/ICESData_for_validation`  
+1. Download ICES data: **DONE** for the all CodeBlue domain for the period 1960-2025 (_except Secci depth for now_).   
+2. Transform data into .parquet tabular files (1 file per variable per year): **DONE**. Everything is available to download in the Drive folder: `WP4/ICESData_for_validation`  
 3. Create the `model.yaml` file (an example is available for `coherens.yaml`) and adapt following your model’s specifications.  
 4. Execute the script `Extract_validation_table.py` to add the Mod.Value column to the parquet files and create the final **validation tables** (1 file per variable per year per model)
 
