@@ -50,7 +50,7 @@ For information purposes an interactive map can be found here: [Station Map](map
 
 ### Station list
 
---8<-- "tables/stations_table.md"  
+--8<-- "tables/stations_table.md"
 
 **/!\ The last station of the list (Archipelago_Cornerb4) seems to be on land.**
 
@@ -58,13 +58,13 @@ For information purposes an interactive map can be found here: [Station Map](map
 
 Related scripts are located in `./scr/stations/`  
 
-The suggested workflow is as follows: 
-- ...To be completed...   
+The suggested workflow is as follows:  
+- ...To be completed...  
 - ...
 
 ## Additional validation
 
-In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see [Validation tables](../validation_tables.md)) were extracted for each station for the following variables: 'oxy', “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”. (using script `ICES_station_extraction.ipynb`).  
+In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see [Validation tables](../validation_tables)) were extracted for each station for the following variables: 'oxy', “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”. (using script `ICES_station_extraction.ipynb`).  
 
 New parquet files have been created (one file per station) containing all available data for each station (and the surrounding 5 km area _(to be discussed)_): the parquet files (+ station_summary.csv) are available for download in the Drive folder: `WP4/ICESData_for_stations`.
 
