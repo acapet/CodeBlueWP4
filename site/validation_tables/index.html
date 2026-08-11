@@ -631,7 +631,7 @@
 <p><strong>Validation Tables</strong> are tabular files containing collocated observations and model values.</p>
 <p>A tabular format is preferred to efficiently store the large number of observation-model pairs while preserving all information required for subsequent analyses.</p>
 <p>Recommended filenames are structured as:</p>
-<p><code>VALID_&lt;VARIABLE&gt;_&lt;YEAR&gt;_&lt;MODEL&gt;.parquet</code></p>
+<p><code>VALID_&lt;VAR&gt;_&lt;YEAR&gt;_&lt;MODEL&gt;.parquet</code></p>
 <h2 id="observation-sources">Observation sources</h2>
 <p>Validation observations are predefined and extracted from reference observational datasets.
 The current validation workflow is based on queries to the ICES database. 
@@ -644,7 +644,7 @@ Observation datasets are therefore fixed a priori to ensure consistency across p
 <th>Variable</th>
 <th>Unit</th>
 <th>Data Unit</th>
-<th>Abr.</th>
+<th>VAR</th>
 </tr>
 </thead>
 <tbody>
@@ -700,7 +700,7 @@ Observation datasets are therefore fixed a priori to ensure consistency across p
 <td>Secchi depth</td>
 <td>m</td>
 <td>m</td>
-<td>sec?</td>
+<td>secchi</td>
 </tr>
 </tbody>
 </table>
@@ -758,8 +758,8 @@ Observation datasets are therefore fixed a priori to ensure consistency across p
 <p><img alt="Validation workflow" src="../figs/validation_diag.svg" /></p>
 <p>The suggested workflow is as follows:  </p>
 <ol>
-<li>Download ICES data: <strong>DONE</strong> for the all CodeBlue domain for the period 1960-2025 (<em>expect Secci depth for now</em>).   </li>
-<li>Transform data into .parquet tabular files (1 file per variable per year): <strong>DONE</strong>. Everything is available in the Drive folder: <code>WP4/ICESData_for_validation</code>  </li>
+<li>Download ICES data: <strong>DONE</strong> for the all CodeBlue domain for the period 1960-2025 (<em>except Secci depth for now</em>).   </li>
+<li>Transform data into .parquet tabular files (1 file per variable per year): <strong>DONE</strong>. Everything is available to download in the Drive folder: <code>WP4/ICESData_for_validation</code>  </li>
 <li>Create the <code>model.yaml</code> file (an example is available for <code>coherens.yaml</code>) and adapt following your model’s specifications.  </li>
 <li>Execute the script <code>Extract_validation_table.py</code> to add the Mod.Value column to the parquet files and create the final <strong>validation tables</strong> (1 file per variable per year per model)</li>
 </ol>

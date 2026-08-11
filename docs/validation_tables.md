@@ -42,7 +42,7 @@ The validation tables currently include the following variables:
 | Chlorophyll  | mg Chl/m³  | µg/l      | chl |
 | Temperature  | °C         | °C        | temp|
 | Salinity     | psu        | psu       | sal |
-| Secchi depth | m          | m         | secchi|
+| Secchi depth | m          | m ?       | secchi|
 
 Additional variables may be included if required by specific validation exercises.
 
