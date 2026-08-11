@@ -1,6 +1,6 @@
 # CodeBlueWP4
 
-Tools and workflows developed in the framework of Work Package 4 (WP4: Policy-oriented synthesis) of the CodeBlue project (project info : [CodeBlue](https://www.smhi.se/codeblue)).
+Tools and workflows developped in the framework of Work Package 4 (WP4: Policy-oriented synthesis) of the CodeBlue project (project info : [CodeBlue](https://www.smhi.se/codeblue)).
 This colaborative repository is intended for modellers who run simulations and conduct postprocessing.
 
 ## Overview

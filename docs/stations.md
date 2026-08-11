@@ -41,6 +41,7 @@ Also, since storage shouldn't be an issue for these files, the files should inlc
 ## Stations
 
 The files are processed automatically based on a central list of stations. The station list is contained in a .csv file in the Github repository, and generated automatically from the file named 'CodeBlue_Stations_Merged.xls' on the CodeBlue GoogleDrive (WP4 folder).    
+
 **/!\ If spotting an error, please report the requested correction on the shared file directly, in the sheet named *correction log sheet* and please inform WP4, as updates are not synchronised automatically between Drive and GitHub.**  
 
 ### Station map
@@ -49,20 +50,22 @@ For information purposes an interactive map can be found here: [Station Map](map
 
 ### Station list
 
---8<-- "tables/stations_table.md"
+--8<-- "tables/stations_table.md"  
+
 **/!\ The last station of the list (Archipelago_Cornerb4) seems to be on land.**
 
 ## Workflow and scripts
 
 Related scripts are located in `./scr/stations/`  
 
-The suggested workflow is as follows:
-- ...
+The suggested workflow is as follows: 
+- ...To be completed...   
 - ...
 
 ## Additional validation
 
-In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see --8<-- "../validation_tables.md" were extracted for each station for the following variables: 'oxy', “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”. (using script `ICES_station_extraction.ipynb`).  
+In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see [Validation tables](../validation_tables.md)) were extracted for each station for the following variables: 'oxy', “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”. (using script `ICES_station_extraction.ipynb`).  
+
 New parquet files have been created (one file per station) containing all available data for each station (and the surrounding 5 km area _(to be discussed)_): the parquet files (+ station_summary.csv) are available for download in the Drive folder: `WP4/ICESData_for_stations`.
 
 ## Example file
