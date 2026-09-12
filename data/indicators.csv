@@ -1,10 +1,30 @@
-ID,Name,Unit,Depth range,Depth operation,Time range,Time operation,Core indicator HELCOM,Core indicator OSPAR
-A1,winter DIN,mmol.N/m³,0-10 m,mean,dec-feb,Mean+Std,Yes,Yes
-A2,winter DIP,mmol.P/m³,0-10 m,mean,dec-feb,Mean+Std,Yes,Yes
-A3,annual total N,mmol.N/m³,0-10 m,mean,annual,Mean+Std,Yes,Regional
-A4,annual total P,mmol.P/m³,0-10 m,mean,annual,Mean+Std,Yes,Regional
-A5,summer Chl 1,mg.Chl/m³,0-10 m,mean,mar-sep,Mean+Std,,Yes
-A6,summer Chl 2,mg.Chl/m³,0-10 m,mean,jun-sep,Mean+Std,Yes,
-A8,summer Secchi depth 1,m,Identification of Secchi depth,Identification of Secchi depth,mar-sep,Mean+Std,,Regional
-A9,summer Secchi depth 2,m,Identification of Secchi depth,Identification of Secchi depth,jun-sep,Mean+Std,Yes,
-A10,nearbed oxygen in stratified period,mmol.O2/m³,0-10 m above seabed,mean of lowest 5th percentile of data,jul-oct,Mean+Std,,Yes
+ID,Name,Unit,Depth range,Depth operation,Time range,Time operation,Core ind. HELCOM,Core ind. OSPAR,Layer dependencies
+A1,surface salinity,psu,0-10 m below surface,mean,annual,Mean+Std,,,M1
+A2,surface temperature,celcius,0-10 m below surface,mean,annual,Mean+Std,,,M4
+A3,winter DIN,mmol.N/m³,0-10 m below surface,mean,dec-feb,Mean+Std,Yes,Yes,M10
+A4,winter DIP,mmol.P/m³,0-10 m below surface,mean,dec-feb,Mean+Std,Yes,Yes,M11
+A5,winter Si,mmol.Si/m³,0-10 m below surface,mean,dec-feb,Mean+Std,,Yes,M12
+A6,annual TN,mmol.N/m³,0-10 m below surface,mean,annual,Mean+Std,Yes,Reg.,M13
+A7,annual TP,mmol.P/m³,0-10 m below surface,mean,annual,Mean+Std,Yes,Reg.,M14
+A8,summer TN,mmol.N/m³,0-10 m below surface,mean,jun-sep,Mean+Std,Yes,Reg.,M13
+A9,summer TP,mmol.P/m³,0-10 m below surface,mean,jun-sep,Mean+Std,Yes,Reg.,M14
+A10,summer Chl 1,mg.Chl/m³,0-10 m below surface,mean,mar-sep,Mean+Std,,Yes,M15
+A11,summer Chl 2,mg.Chl/m³,0-10 m below surface,mean,jun-sep,Mean+Std,Yes,,M15
+A12,chl 90th percentile 1,mg.Chl/m³,optical depth,90th percentile,mar-sep,–,,,D2
+A13,chl 90th percentile 2,mg.Chl/m³,optical depth,90th percentile,mar-oct,–,,,D2
+A14,net primary productivity,mmol.C/m²/d,whole water column,integrated,annual,Mean+Std,,,M21
+A15,total phyto. biomass,mmol.C/m²,whole water column,integrated,annual,Mean+Std,,,M16
+A16,total zoo. biomass,mmol.C/m²,whole water column,integrated,annual,Mean+Std,,,M17
+A17,summer secchi depth 1,m,-,,mar-sep,Mean+Std,,Reg.,M29
+A18,summer secchi depth 2,m,-,,jun-sep,Mean+Std,Yes,,M29
+A19,oxygen,mmol.O2/m³,0-10 m above seabed,mean of lowest 5th percentile of data,jul-oct,Mean+Std,,Yes,D7
+A20,oxygen debt,mmol.O2/m³,Below halocline,mean,annual,Mean+Std,Yes,,DB1-6
+A21,O2 < 187.5 mmol.O2/m³,days,0-10 m above seabed,-,annual,count days,,,D7
+A22,O2 < 125 mmol.O2/m³,days,0-10 m above seabed,-,annual,count days,,,D7
+A23,O2 < 62.5 mmol.O2/m³,days,0-10 m above seabed,-,annual,count days,,,D7
+A24,surface pH,total scale,0-10 m below surface,mean,annual,Mean+Std,,,M31
+A25,surface DIC,mol/m3,0-10 m below surface,mean,annual,Mean+Std,,,M32
+A26,surface alkalinity,mol/m3,0-10 m below surface,mean,annual,Mean+Std,,,M33
+A27,bottom pH,total scale,0-10 m above seabed,mean,annual,Mean+Std,,,M34
+A28,bottom DIC,mol/m3,0-10 m above seabed,mean,annual,Mean+Std,,,M35
+A29,bottom alkalinity,mol/m3,0-10 m above seabed,mean,annual,Mean+Std,,,M36
