@@ -639,101 +639,193 @@
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Variable</th>
-<th>Unit</th>
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Unit</th>
+<th style="text-align: left;">Depth range</th>
+<th style="text-align: left;">Depth operation</th>
+<th style="text-align: left;">Time range</th>
+<th style="text-align: left;">Time operation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>D1</td>
-<td>Chlorophyll (optical depth average)</td>
-<td>mg Chl/m³</td>
+<td style="text-align: left;">D1</td>
+<td style="text-align: left;">PAR attenuation</td>
+<td style="text-align: left;">m-1</td>
+<td style="text-align: left;">0-10 m below surface</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D2</td>
-<td>Chlorophyll (water-column integrated)</td>
-<td>mg Chl/m²</td>
+<td style="text-align: left;">D2</td>
+<td style="text-align: left;">Chlorophyll</td>
+<td style="text-align: left;">mg.Chl/m³</td>
+<td style="text-align: left;">Optical depth</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D3</td>
-<td>DIN</td>
-<td>mol/m³</td>
+<td style="text-align: left;">D3</td>
+<td style="text-align: left;">Chlorophyll</td>
+<td style="text-align: left;">mg.Chl/m²</td>
+<td style="text-align: left;">Whole column</td>
+<td style="text-align: left;">Integral</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D4</td>
-<td>DIP</td>
-<td>mol/m³</td>
+<td style="text-align: left;">D4</td>
+<td style="text-align: left;">DIN</td>
+<td style="text-align: left;">mmol/m³</td>
+<td style="text-align: left;">Optical depth</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D5</td>
-<td>Silicate</td>
-<td>mol/m³</td>
+<td style="text-align: left;">D5</td>
+<td style="text-align: left;">DIP</td>
+<td style="text-align: left;">mmol/m³</td>
+<td style="text-align: left;">Optical depth</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D6*</td>
-<td>Cyanobacteria</td>
-<td>mg Chl/m³</td>
+<td style="text-align: left;">D6</td>
+<td style="text-align: left;">Silicate</td>
+<td style="text-align: left;">mmol/m³</td>
+<td style="text-align: left;">Optical depth</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D7*</td>
-<td>Oxygen (3D field)</td>
-<td>mmol O₂/m³</td>
+<td style="text-align: left;">D7</td>
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">mmol.O2/m³</td>
+<td style="text-align: left;">0-10 m above seabed</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D8*</td>
-<td>Temperature (3D field)</td>
-<td>°C</td>
+<td style="text-align: left;">D8</td>
+<td style="text-align: left;">mixed layer depth</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: left;">Cf. D4.1</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D9*</td>
-<td>Salinity (3D field)</td>
-<td>psu</td>
+<td style="text-align: left;">D9</td>
+<td style="text-align: left;">Surface temperature</td>
+<td style="text-align: left;">°C</td>
+<td style="text-align: left;">0-10 m below surface</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D10*</td>
-<td>Hydrogen sulphide (H₂S)</td>
-<td>mmol/m³</td>
+<td style="text-align: left;">D10</td>
+<td style="text-align: left;">Bottom temperature</td>
+<td style="text-align: left;">°C</td>
+<td style="text-align: left;">0-10 m above seabed</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D11*</td>
-<td>Ammonium (NH₄)</td>
-<td>mmol/m³</td>
+<td style="text-align: left;">D11</td>
+<td style="text-align: left;">Bottom salinity</td>
+<td style="text-align: left;">psu</td>
+<td style="text-align: left;">0-10 m above seabed</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
+</tr>
+</tbody>
+</table>
+<p>In addition, Baltic model considers : </p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Unit</th>
+<th style="text-align: left;">Depth range</th>
+<th style="text-align: left;">Depth operation</th>
+<th style="text-align: left;">Time range</th>
+<th style="text-align: left;">Time operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">DB1</td>
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">mmol.O2/m³</td>
+<td style="text-align: left;">3D</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D12*</td>
-<td>Sea surface height</td>
-<td>m</td>
+<td style="text-align: left;">DB2</td>
+<td style="text-align: left;">Temperature</td>
+<td style="text-align: left;">°C</td>
+<td style="text-align: left;">3D</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D13</td>
-<td>Near-bottom oxygen</td>
-<td>mmol O₂/m³</td>
+<td style="text-align: left;">DB3</td>
+<td style="text-align: left;">Salinity</td>
+<td style="text-align: left;">psu</td>
+<td style="text-align: left;">3D</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D14</td>
-<td>Near-bottom temperature</td>
-<td>°C</td>
+<td style="text-align: left;">DB4</td>
+<td style="text-align: left;">H2S (if not in neg O2)</td>
+<td style="text-align: left;">mmol/m³</td>
+<td style="text-align: left;">3D</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D15</td>
-<td>Near-bottom salinity</td>
-<td>psu</td>
+<td style="text-align: left;">DB5</td>
+<td style="text-align: left;">NH4</td>
+<td style="text-align: left;">mmol/m³</td>
+<td style="text-align: left;">3D</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D16</td>
-<td>Mixed layer depth</td>
-<td>m</td>
+<td style="text-align: left;">DB6</td>
+<td style="text-align: left;">Sea surface height</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 <tr>
-<td>D17</td>
-<td>Surface temperature</td>
-<td>°C</td>
-</tr>
-<tr>
-<td>D18</td>
-<td>Bottom temperature</td>
-<td>°C</td>
+<td style="text-align: left;">DB7</td>
+<td style="text-align: left;">Cyanobacteria</td>
+<td style="text-align: left;">mg.Chl/m³</td>
+<td style="text-align: left;">Optical depth</td>
+<td style="text-align: left;">Mean</td>
+<td style="text-align: left;">Daily</td>
+<td style="text-align: left;">Mean</td>
 </tr>
 </tbody>
 </table>
