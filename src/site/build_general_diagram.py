@@ -44,8 +44,13 @@ g.edge("SIM", "SCR_S", lhead="cluster_scripts")
 g.edge("list_station", "WEB", ltail="cluster_lists")
 
 
-for n in ['INDICATORS', 'MONTHLY', 'DAILY', 'VALID', 'STATION']:
+for n in ['MONTHLY', 'DAILY', 'VALID', 'STATION']:
     g.edge("SCR_G", n, ltail="cluster_scripts")
+
+g.edge("MONTHLY", "INDICATORS")
+g.edge("DAILY", "INDICATORS")
+
+g.edge("STRUCT", "VALID")
 
 g.edge("list_station", "SCR_G", lhead="cluster_scripts", ltail="cluster_lists")
 

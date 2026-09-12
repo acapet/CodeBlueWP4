@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from shapely.geometry import Polygon, MultiPolygon
 import geopandas as gpd
-import geodatasets
+# import geodatasets
 
 import cartopy.io.shapereader as shpreader
 
