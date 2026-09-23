@@ -91,8 +91,8 @@ model_lat_min = float(xmod[lat_dim].min())
 model_lat_max = float(xmod[lat_dim].max())
 
 # This should contain the full list of validation variables
-#TODO: interface with validation.csv .. if needed
-vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal']
+vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal', 'talk', 'ph']
+# vars=['ph']
 
 for var in vars:
     # Shaping local in situ dataframe   

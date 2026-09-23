@@ -4,9 +4,9 @@ model:
   
 # Ajust your paths
 files:
-  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos4_carb/{year}/NoS_1.tsout3.nc" # Model output
-  insitudatadir: "/hpcperm/bel9956/codeblue/ICESData_for_validation/" # ICES data
-  outdir: "/hpcperm/bel9956/codeblue/validation/nos4/" # Final tabular validations tables
+  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/{year}/NoS_1.tsout3.nc" # Model output
+  stations: "/home/bel9956/CodeBlueWP4/src/stations/stations.csv" # Station list
+  outdir: "/hpcperm/bel9956/codeblue/stations/" # Final netcdf stations tables
 
 # Ajust your model's coordinate names
 coordinates:
@@ -65,6 +65,3 @@ variables:
     model_name: alk
     conversion: 1
 
-  
-    
-  

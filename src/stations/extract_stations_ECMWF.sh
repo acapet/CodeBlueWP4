@@ -7,11 +7,11 @@
 set -euo pipefail
 
 MOD=coherens
-YEAR=2011
+YEAR=2012
+SCENARIO=BASE
 
 module load conda
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate codeblueWP4
 
-python3 Extract_validation_tables.py -v $MOD $YEAR 
-
+python3 Extract_station_files.py -v $MOD $YEAR $SCENARIO
