@@ -31,7 +31,7 @@ At this stage, a common list includes the following variables:
 | Chlorophyll  | mg Chl/m³  | µg/l      | chl |
 | Temperature  | °C         | °C        | temp|
 | Salinity     | psu        | psu       | sal |
-| Secchi depth | m          | m ?       | secchi|
+| Secchi depth | m          | m         | sec|
 | pH           |total scale | -         | ph|
 | Total Alkalinity | mol/m³ | mEq/l     | talk|
 | DIC          | mmol.C/m³  |mmol.C/m³ ?| dic|
@@ -52,25 +52,26 @@ For information purposes an interactive map can be found here: [Station Map](map
 
 --8<-- "tables/stations_table.md"
 
-**/!\ The last station of the list (Archipelago_Cornerb4) seems to be on land.**
-
 ## Workflow and scripts
 
 Related scripts are located in `./scr/stations/`  
 
-The suggested workflow is as follows:  
-- ...To be completed...  
-- ...
+The suggested workflow is as follows:   
+
+1. Create the `model.yaml` file (an example is available for `coherens.yaml`) and adapt following your model’s specifications.  
+2. Execute the script `Extract_station_files.py` to extract vertical profiles of model output at specific station points. It creates the final **station files** i.e. netCDF files with dimensions *time* and *depth* (1 file per station per scenario per year per model).
 
 ## Additional validation
 
-In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see [Validation tables](../validation_tables)) were extracted for each station for the following variables: 'oxy', “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”. (using script `ICES_station_extraction.ipynb`).  
+In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see [Validation tables](../validation_tables)) were extracted for each station for the following variables: "oxy", “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”, "sec". (using script `ICES_station_extraction_NETCDF.ipynb`).  
 
-New parquet files have been created (one file per station) containing all available data for each station (and the surrounding 5 km area _(to be discussed)_): the parquet files (+ station_summary.csv) are available for download in the Drive folder: `WP4/ICESData_for_stations`.
+NetCDF files have been created (one file per station with dimensions *time* and *depth*) containing all available data for each station (and the surrounding 2 km area _(to be discussed)_): netCDF files are available for download in the Drive folder: `WP4/ICESData_for_stations(netCDF)`.
 
 ## Example file
 
-Exemple of a station file (model: coherens, year: 2010, station: W04, scenario: H1) is available: `./scr/stations/W04_H1_2010_RBINS.nc`   
-..TO BE COMPLETED.. 
+Exemple of a station file (model: coherens, year: 2010, station: W04, scenario: H1) is available: `./scr/stations/STATION_W04_BASE_2012_coherens.nc`   
+
+Example of script if you want to play with your station files and compare them with the data profiles: `./scr/station/Postproc_station files.ipynb`  
+
 
 
