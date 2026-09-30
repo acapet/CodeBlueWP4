@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -728,8 +728,8 @@
 <tr>
 <td>Secchi depth</td>
 <td>m</td>
-<td>m ?</td>
-<td>secchi</td>
+<td>m</td>
+<td>sec</td>
 </tr>
 <tr>
 <td>pH</td>
@@ -1538,18 +1538,19 @@
 </tr>
 </tbody>
 </table>
-<p><strong>/!\ The last station of the list (Archipelago_Cornerb4) seems to be on land.</strong></p>
 <h2 id="workflow-and-scripts">Workflow and scripts</h2>
 <p>Related scripts are located in <code>./scr/stations/</code>  </p>
-<p>The suggested workflow is as follows:<br />
-- ...To be completed...<br />
-- ...</p>
+<p>The suggested workflow is as follows:   </p>
+<ol>
+<li>Create the <code>model.yaml</code> file (an example is available for <code>coherens.yaml</code>) and adapt following your model’s specifications.  </li>
+<li>Execute the script <code>Extract_station_files.py</code> to extract vertical profiles of model output at specific station points. It creates the final <strong>station files</strong> i.e. netCDF files with dimensions <em>time</em> and <em>depth</em> (1 file per station per scenario per year per model).</li>
+</ol>
 <h2 id="additional-validation">Additional validation</h2>
-<p>In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see <a href="../validation_tables">Validation tables</a>) were extracted for each station for the following variables: 'oxy', “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”. (using script <code>ICES_station_extraction.ipynb</code>).  </p>
-<p>New parquet files have been created (one file per station) containing all available data for each station (and the surrounding 5 km area <em>(to be discussed)</em>): the parquet files (+ station_summary.csv) are available for download in the Drive folder: <code>WP4/ICESData_for_stations</code>.</p>
+<p>In addition, ICES data (previously converted into .parquet files for the entire Codeblue area and covering the period 1960–2025; see <a href="../validation_tables">Validation tables</a>) were extracted for each station for the following variables: "oxy", “nox”, “nh4”, “po4”, “sio”, “chl”, “temp”, “sal”, “spm”, “ph”, “talk”, "sec". (using script <code>ICES_station_extraction_NETCDF.ipynb</code>).  </p>
+<p>NetCDF files have been created (one file per station with dimensions <em>time</em> and <em>depth</em>) containing all available data for each station (and the surrounding 2 km area <em>(to be discussed)</em>): netCDF files are available for download in the Drive folder: <code>WP4/ICESData_for_stations(netCDF)</code>.</p>
 <h2 id="example-file">Example file</h2>
-<p>Exemple of a station file (model: coherens, year: 2010, station: W04, scenario: H1) is available: <code>./scr/stations/W04_H1_2010_RBINS.nc</code> <br />
-..TO BE COMPLETED.. </p>
+<p>Exemple of a station file (model: coherens, year: 2010, station: W04, scenario: H1) is available: <code>./scr/stations/STATION_W04_BASE_2012_coherens.nc</code>   </p>
+<p>Example of script if you want to play with your station files and compare them with the data profiles: <code>./scr/station/Postproc_station files.ipynb</code>  </p>
 
 
 
@@ -1602,7 +1603,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
