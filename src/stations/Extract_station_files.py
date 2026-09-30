@@ -101,7 +101,7 @@ lev_dim = cfg["coordinates"]["vertical"]
 #dep_dim = cfg["coordinates"]["dep"]
 
 # Vertical coordinate in the model
-z_name = cfg["coordinates"].get("depth", "z")
+z_name = cfg["coordinates"].get("depth", "depth")
 
 # Get model extent
 model_lon_min = float(xmod[lon_dim].min())
@@ -111,74 +111,8 @@ model_lat_min = float(xmod[lat_dim].min())
 model_lat_max = float(xmod[lat_dim].max())
 
 # This should contain the full list of validation variables
-vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal']#, 'secchi', 'ph', 'talk', 'dic']
+vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal', 'sec', 'ph', 'talk', 'dic']
 
-# for var in vars:
-#     # Shaping local in situ dataframe   
-#     fname = cfg["files"]["insitudatadir"]+'%s_%s.parquet'%(var,modyear)
-#     if verbose: print('reading %s'%fname)
-#     dfl =pd.read_parquet(fname)
-#     if verbose : print(dfl.columns)
-
-    
-#     ## This shouldn't be needed ... 
-#     dflt=dfl[dfl['datetime'].dt.year == modyear]
-
-#     dflt = dflt[
-#         (dflt["lon"] >= model_lon_min) &
-#         (dflt["lon"] <= model_lon_max) &
-#         (dflt["lat"] >= model_lat_min) &
-#         (dflt["lat"] <= model_lat_max)
-#     ]
-#     dflt = dflt.dropna()
-
-#     # Get coordinates
-#     lons  = xr.DataArray(dflt['lon'], dims="points")
-#     lats  = xr.DataArray(dflt['lat'], dims="points")
-#     times = xr.DataArray(dflt['datetime'], dims="points")
-#     depths = xr.DataArray(dflt['depth'], dims="points")
-
-#     # Get model specific coordinate variable names
-#     vcfg = cfg["variables"][var]
-#     mvar = vcfg["model_name"]
-#     conversion = vcfg.get("conversion", 1.0)
-   
-#     # Local model data
-#     xmodv = xmod[[mvar, 'z']].copy()*conversion
-    
-#     xmodv = xmodv.chunk({
-#         time_dim: 50,
-#         lat_dim: 100,
-#         lon_dim: 100,
-#         lev_dim: -1
-#     })
-
-#     # First horizontal interpolation, to get vertical columns
-#     tmp = xmodv.interp({lon_dim:lons, lat_dim:lats, time_dim:times})
-#     z = tmp["z"]
-    
-#     tmp = tmp.chunk({lev_dim: -1})
-#     z   = z.chunk({lev_dim: -1})
-    
-#     # Organize the distribution of vertical interpolation 
-#     result = xr.apply_ufunc(
-#         np.interp,
-#         depths,
-#         z,
-#         tmp[mvar],
-#         input_core_dims=[[], [lev_dim], [lev_dim]],
-#         output_core_dims=[[]],
-#         vectorize=True,
-#         dask="parallelized",
-#         output_dtypes=[tmp[mvar].dtype],
-#     )
-
-#     # This is where the computation actually takes place. All the above is 'lazy'
-#     dflt['mod']=result
-
-#     ofname = "%s/VALID_%s_%s_%s.parquet"%(cfg["files"]["outdir"],var,modyear,modelid)
-#     if verbose : print(" Saving to %s"%ofname)
-#     dflt.to_parquet(ofname)
 
 # Prepare output directory
 outdir = cfg["files"]["outdir"]
@@ -196,28 +130,37 @@ for _, station in stations.iterrows():
         print("Longitude:", station_lon)
         print("Latitude :", station_lat)
 
-    #################################################################
     # Check station location
-    #################################################################
-
     if not (
         model_lon_min <= station_lon <= model_lon_max
         and
         model_lat_min <= station_lat <= model_lat_max
     ):
 
-        print(
-            f"WARNING: Station {station_name} "
-            f"is outside model domain. Skipping."
-        )
-
+        print( f"WARNING: Station {station_name} " f"is outside model domain. Skipping.")
         continue
 
+    # Extract local bathymetry at station
+    station_bathy = xmod[z_name].interp({lon_dim: station_lon, lat_dim: station_lat})
+    station_depth = float(station_bathy.values)
 
-    #################################################################
+    if verbose:
+        print(f"  Local water depth: {station_depth:.2f} m")
+        
+    # Convert sigma levels to physical depth
+    sigma = xmod[lev_dim]
+
+    physical_depth = -sigma * station_depth
+
+    physical_depth.name = "depth"
+    physical_depth.attrs = {
+        "long_name": "Depth",
+        "units": "m",
+        "positive": "down",
+        "description": "Physical depth derived from sigma coordinate"
+    }
+    
     # Extract all variables
-    #################################################################
-
     station_data = {}
 
     for var in vars:
@@ -225,88 +168,49 @@ for _, station in stations.iterrows():
         if verbose:
             print("  Processing:", var)
 
-        #################################################################
         # Model variable name and conversion
-        #################################################################
-
         vcfg = cfg["variables"][var]
 
         mvar = vcfg["model_name"]
         conversion = vcfg.get("conversion", 1.0)
 
-        #################################################################
         # Check variable exists
-        #################################################################
-
         if mvar not in xmod:
-
-            print(
-                f"WARNING: {mvar} not found in model file. "
-                f"Skipping {var}."
-            )
-
+            print( f"WARNING: {mvar} not found in model file. " f"Skipping {var}.")
             continue
 
-        #################################################################
         # Extract model variable
-        #################################################################
-
         model_var = xmod[mvar] * conversion
 
-        #################################################################
+
         # Horizontal interpolation
-        #
         # The entire vertical profile is retained.
-        #################################################################
+        profile = model_var.interp({lon_dim: station_lon, lat_dim: station_lat})
 
-        profile = model_var.interp(
-            {
-                lon_dim: station_lon,
-                lat_dim: station_lat
-            }
-        )
+        # Replace sigma coordinate with physical depth
+        profile = profile.assign_coords({lev_dim: physical_depth})
 
-        #################################################################
+        # Rename lev -> depth
+        profile = profile.rename({lev_dim: "depth"})
+
         # Store with ICES-style variable name
-        #################################################################
-
         station_data[var] = profile
 
 
-    #################################################################
     # Create Dataset
-    #################################################################
-
     ds_station = xr.Dataset(station_data)
 
+    # Make sure depth is a coordinate
+    ds_station = ds_station.assign_coords(depth=physical_depth)
+    ds_station["depth"].attrs = {
+        "long_name": "Depth",
+        "units": "m",
+        "positive": "down",
+        "sigma_coordinate": "lev",
+        "water_depth": station_depth
+    }
 
-    #################################################################
-    # Rename vertical coordinate to "depth"
-    #################################################################
-
-    if z_name in ds_station.coords:
-
-        ds_station = ds_station.rename(
-            {z_name: "depth"}
-        )
-
-    elif z_name in ds_station.data_vars:
-
-        ds_station = ds_station.rename(
-            {z_name: "depth"}
-        )
-
-    elif lev_dim in ds_station.coords:
-
-        ds_station = ds_station.rename(
-            {lev_dim: "depth"}
-        )
-
-
-    #################################################################
     # Add station coordinates / metadata
-    #################################################################
-
     ds_station.attrs["station"] = station_name
     ds_station.attrs["latitude"] = station_lat
     ds_station.attrs["longitude"] = station_lon
@@ -314,35 +218,24 @@ for _, station in stations.iterrows():
     ds_station.attrs["year"] = modyear
     ds_station.attrs["model"] = modelid
 
-
-    #################################################################
     # Output filename
-    #################################################################
-
     ofname = (
         f"{outdir}/"
         f"STATION_{station_name}_{scenario}_"
         f"{modyear}_{modelid}.nc"
     )
 
-
-    #################################################################
     # Save NetCDF
-    #################################################################
-
     if verbose:
-        print("  Saving:", ofname)
+        print("Saving:", ofname)
 
     ds_station.to_netcdf(ofname)
 
     if verbose:
-        print("  Done")
+        print("Done")
 
 
-#####################################################################
 # Close model
-#####################################################################
-
 xmod.close()
 
 if verbose:
