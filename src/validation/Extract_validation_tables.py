@@ -91,8 +91,7 @@ model_lat_min = float(xmod[lat_dim].min())
 model_lat_max = float(xmod[lat_dim].max())
 
 # This should contain the full list of validation variables
-vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal', 'talk', 'ph']
-# vars=['ph']
+vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal', 'talk', 'ph', 'sec']
 
 for var in vars:
     # Shaping local in situ dataframe   
@@ -124,7 +123,8 @@ for var in vars:
     conversion = vcfg.get("conversion", 1.0)
    
     # Local model data
-    xmodv = xmod[[mvar, 'z']].copy()*conversion
+    xmodv = xmod[[mvar, "z"]].copy()
+    xmodv[mvar] = xmodv[mvar] * conversion
     
     xmodv = xmodv.chunk({
         time_dim: 50,
