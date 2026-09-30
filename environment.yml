@@ -17,4 +17,7 @@ dependencies:
   - cartopy
   - cmocean
   - folium
+  - seaborn
+  - jupyterlab
+  - XGCM
   

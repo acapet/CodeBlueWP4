@@ -1,0 +1,122 @@
+# Smoke-test configuration used by run_validation.sbatch.
+# MODEL_ID=test makes the extractor load test.yml and use "test" in outputs.
+# Keep model.name equal to MODEL_ID for a clear, consistent run identity.
+model:
+  name: test
+
+files:
+  # Native GETM-ERSEM-BFM annual output.
+  # This may be a symbolic link to the actual NetCDF file.
+  pattern: "/export/lv9/user/klarsen/model_out/CodeBlueWP4-KLL_update/validations/Test/input_data/model_input/model_input.nc"
+
+  # Directory containing ICES files named <variable>_<year>.parquet.
+  insitudatadir: "/export/lv9/user/klarsen/model_out/CodeBlue_validation/data/ICES/ICESData_for_validation/"
+
+  # Must exist and be empty before a new extraction.
+  # This must match TABLE_DIR in the Slurm submission script.
+  outdir: "/export/lv9/user/klarsen/model_out/CodeBlueWP4-KLL_update/validations/Test/output/"
+
+# Names of the coordinate variables in the model NetCDF file.
+coordinates:
+  time: time
+  lon: lonc
+  lat: latc
+  vertical: level
+
+# Model-specific vertical-coordinate mapping
+#
+# This GETM-ERSEM-BFM example reconstructs physical depths from the native
+# layer-thickness variable h. Users adapting another model should first select
+# and configure one of the supported methods in vertical_handling.py:
+#
+#   existing_z
+#   layer_thickness
+#   interface_variable
+#
+# The calculations are implemented in:
+#   src/validation/vertical_handling.py
+#
+# The surrounding observation-matching workflow is implemented in:
+#   src/validation/Extract_validation_tables.py
+#
+# Configure one of these supported methods before modifying Python. Change
+# vertical_handling.py only when the model has a genuinely unsupported vertical
+# coordinate and representative model data are available for a regression test.
+
+vertical_coordinate:
+  method: layer_thickness
+  thickness_variable: h
+  native_order: bottom_to_surface
+  inactive_level_indices: [0]
+  positive: down
+  reference: instantaneous_surface
+  observation_reference: instantaneous_surface
+  outside_column: missing
+  missing_values:
+    - -9998.0
+    - -9999.0
+
+# Optional derived model variables.
+#
+# Use this section when a validation variable must be calculated from multiple
+# model variables. Expressions operate on variables in the model dataset.
+#
+# derived_variables:
+#   chl:
+#     expression: "chlsc + chlnsc"
+#   secchi:
+#     expression: "1 / paratt0"
+
+# Map ICES validation variables to model variables.
+#
+# conversion is a scalar multiplier applied only to the model tracer values.
+# It is not applied to depth or other vertical-coordinate variables.
+variables:
+  oxy:
+    # Target: mL O2 L-1
+    # Source O2o: mmol O2 m-3
+    model_name: O2o
+    conversion: 0.0223914
+
+  nox:
+    # Target: umol L-1
+    model_name: N3n
+    conversion: 1.0
+  nh4:
+    # Target: umol L-1
+    model_name: N4n
+    conversion: 1.0
+
+  po4:
+    # Target: umol L-1
+    model_name: N1p
+    conversion: 1.0
+
+  sio:
+    # Target: umol L-1
+    model_name: N5s
+    conversion: 1.0
+
+  chl:
+    # Target: ug L-1
+    model_name: Chla
+    conversion: 1.0
+
+  temp:
+    # Target: degrees Celsius
+    model_name: temp
+    conversion: 1.0
+
+  sal:
+    # Target: dimensionless practical salinity
+    model_name: salt
+    conversion: 1.0
+
+  talk:
+    # Target ICES unit: mEq L-1
+    #
+    # The factor 0.001 is the established comparison convention used for the
+    # accepted validation runs. Retain the known source-unit and density caveat
+    # when interpreting alkalinity results.
+    model_name: Ac
+    conversion: 0.001

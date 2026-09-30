@@ -1,0 +1,44 @@
+region_int,Area_Name_,Country,ID,LongName,Shape_Leng,Shape_Area
+0,Coastal,FR,CFR,Coastal FR channel,7.29741589437,0.898088151431
+1,Channel coastal shelf tidal influenced,,CCTI,Channel coastal shelf tidal influenced,4.59204664487,0.646509152964
+2,Atlantic,,ATL,Atlantic,103.48691415,132.606449423
+3,Shannon plume,IRL,SHPM,Shannon plume,1.48797501832,0.0503675753184
+4,Coastal,NOR,CNOR1,Coastal NOR 1,12.9432791869,1.48355275878
+5,Coastal,NOR,CNOR2,Coastal NOR 2,6.32631085457,0.40474594803
+6,Coastal,NOR,CNOR3,Coastal NOR 3,7.69943390486,0.268014890524
+7,Dogger Bank,,DB,Dogger Bank,8.75253355265,2.06685955883
+8,Kattegat Deep,,KD,Kattegat Deep,8.05021642452,0.736576291436
+9,Norwegian Trench,,NT,Norwegian Trench,33.0074286754,9.46451803373
+10,Southern North Sea,,SNS,Southern North Sea,22.1799586582,8.24335279153
+11,German Bight central,GER,GBC,German Bight (deep),4.48741873219,0.628880117152
+12,Gulf of Biscay shelf waters,FR,GBSW,Gulf of Biscay shelf waters,14.0455151302,2.42702629386
+13,Seine plume,FR,SPM,Seine plume,1.84709974495,0.138493703989
+14,Coastal,UK,CUKC,Coastal UK channel,8.49008707987,0.799589039177
+15,Channel well mixed tidal influenced,,CWMTI,Channel well mixed tidal influenced,11.5773106128,2.58991267177
+16,Scheldt plume,,SCHPM1,Scheldt plume 1,2.17671742639,0.075245969481
+17,Elbe plume,,ELPM,Elbe plume,6.87132622724,1.09869388489
+18,Scheldt plume,NL,SCHPM2,Scheldt plume 2,0.516682088311,0.0123893359767
+19,Meuse plume,,MPM,Meuse plume,0.670112818789,0.0268599407264
+20,Rhine plume,ES,RHPM,Rhine plume,7.61715589167,0.303419263366
+21,Ems plume,,EMPM,Ems plume,3.93906760555,0.197123090718
+22,Thames plume,UK,THPM,Thames plume,5.55276378816,0.720278169071
+23,Humber plume,UK,HPM,Humber plume,2.80526315951,0.184394807166
+24,East Coast (permanently mixed),UK,ECPM1,East Coast (permanently mixed) 1,5.7517932824,0.523070072598
+25,East Coast (permanently mixed),UK,ECPM2,East Coast (permanently mixed) 2,5.13898238821,0.201491021209
+26,Intermittently Stratified,UK,IS2,Intermittently Stratified 2,21.9325952099,4.09764835849
+27,Coastal DEDK,,OC,Outer Coastal DEDK,12.5281130336,2.67055558757
+28,Eastern North Sea,,ENS,Eastern North Sea,15.8035844907,8.52145406851
+29,Atlantic Seasonally Stratified,,ASS,Atlantic Seasonally Stratified,44.0553169431,27.2886713759
+30,Coastal,IRL,CIRL,Coastal IRL 3,6.18900555414,1.28402618136
+31,Coastal,UK,CUK1,Coastal UK 1,10.232812457,1.3632764698
+32,Intermittently Stratified,UK,IS1,Intermittently Stratified 1,36.1472759935,11.1320953948
+33,Irish Sea,,IRS,Irish Sea,19.0688227257,4.44884486316
+34,Kattegat Coastal,,KC,Kattegat Coastal,13.5048907415,1.41374026619
+35,Northern North Sea,,NNS,Northern North Sea,56.3568502846,39.9071222217
+36,Channel well mixed,,CWM,Channel well mixed,15.5530763155,5.20132227389
+37,Liverpool Bay plume,UK,LBPM,Liverpool Bay plume,3.11387786922,0.185212399395
+38,Skagerak,,SK,Skagerak,7.47109312169,0.8788547698
+39,Scottish Sea,UK,SS,Scottish Sea,48.2164493668,8.13832954609
+40,Loire plume,FR,LPM,Loire plume,2.35826110582,0.177099332881
+41,Gulf of Biscay coastal waters,FR,GBCW,Gulf of Biscay coastal waters,13.3460008977,1.256124208
+42,Noratlantic Area NOR-NorO1,ES,NAAO1,Noratlantic Area NOR-NorO1(D5),42.9443533414,29.5581767909
