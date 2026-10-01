@@ -112,7 +112,20 @@ model_lat_max = float(xmod[lat_dim].max())
 
 # This should contain the full list of validation variables
 vars=['oxy','nox','nh4','po4','sio','chl', 'temp', 'sal', 'sec', 'ph', 'talk', 'dic']
-
+units = {
+    'oxy': 'ml/l',
+    'nox': 'µmol/l',
+    'nh4': 'µmol/l',
+    'po4': 'µmol/l',
+    'sio': 'µmol/l',
+    'chl': 'µg/l',
+    'temp': 'degC',
+    'sal': 'psu',
+    'sec': 'm',
+    'ph': '-',
+    'talk': 'mEq/l',
+    'dic': 'mmol/l'
+}
 
 # Prepare output directory
 outdir = cfg["files"]["outdir"]
@@ -182,10 +195,10 @@ for _, station in stations.iterrows():
         # Extract model variable
         model_var = xmod[mvar] * conversion
 
-
         # Horizontal interpolation
         # The entire vertical profile is retained.
         profile = model_var.interp({lon_dim: station_lon, lat_dim: station_lat})
+        profile.attrs["units"] = units[var]
 
         # Replace sigma coordinate with physical depth
         profile = profile.assign_coords({lev_dim: physical_depth})
