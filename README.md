@@ -35,3 +35,6 @@ See `requirements.txt`.
 Create your environment via:  
 _module load conda_  
 _conda env create -f `environment.yml`_
+
+to just update the conda environment after modification of the environment.yml:
+_conda env update --file environment.yml  --prune_

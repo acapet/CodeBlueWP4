@@ -1,0 +1,4 @@
+Regional mapping files belong in this directory.
+
+The example uses OSPAR reporting areas. Large NetCDF and ZIP assets are not
+tracked by Git; supply them locally before running notebook maps.

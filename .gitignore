@@ -1,3 +1,71 @@
-*.ipynb_checkpoints/
-*/slurm-*.out
-*__pycache__
+# Python caches and test products
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter temporary state
+.ipynb_checkpoints/
+
+# Local Python environments
+.venv/
+venv/
+env/
+.conda/
+
+# Scientific data and generated tables
+*.nc 
+*.nc4
+*.cdf
+*.parquet
+*.zarr/
+*.zip
+
+# Allow only deliberately small, reviewed regression fixtures.
+!tests/fixtures/**/*.nc
+!tests/fixtures/**/*.parquet
+
+# Interactive validation products and external input data
+validations/**/output/
+validations/**/output/**
+validations/**/logs/
+validations/**/logs/**
+validations/**/provenance/
+validations/**/provenance/**
+validations/**/review/
+validations/**/review/**
+validations/**/tables/
+validations/**/tables/**
+validations/**/input_data/model_input/
+validations/**/input_data/model_input/**
+validations/**/input_data/ICES/
+validations/**/input_data/ICES/**
+
+# Scheduler and runtime logs
+slurm-*.out
+slurm-*.err
+*.log
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*~
+.~lock.*
+
+# Local configuration and secrets
+.env
+.env.*
+*.local.yml
+*.local.yaml
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

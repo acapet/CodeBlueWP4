@@ -1,0 +1,92 @@
+# Concrete GETM-ERSEM-BFM example for the 2014 ORAS5 validation run.
+# The filename without .yml is the MODEL_ID used by the extractor.
+model:
+  name: GETM_ERSEM_BFM_ORAS5_update
+
+files:
+  # Native annual model output; this may be a symlink to the real NetCDF file.
+  pattern: "/export/lv9/user/klarsen/model_out/CodeBlueWP4-KLL_update/validations/Test/input_data/model_input/model_input.nc"
+
+  # Directory containing ICES files named <variable>_<year>.parquet.
+  insitudatadir: "/export/lv9/user/klarsen/model_out/CodeBlue_validation/data/ICES/ICESData_for_validation/"
+
+  # Must exist and be empty before extraction. Keep this equal to TABLE_DIR in
+  # the Slurm wrapper.
+  outdir: "/export/lv9/user/klarsen/model_out/CodeBlueWP4-KLL_update/validations/Test/output/"
+
+# Names of coordinate variables in the model NetCDF file.
+coordinates:
+  time: time
+  lon: lonc
+  lat: latc
+  vertical: level
+
+# GETM native vertical-coordinate mapping. Layer thickness h reconstructs
+# instantaneous positive-down physical depths. GETM layers are stored from
+# bottom to surface, and index 0 is inactive padding.
+vertical_coordinate:
+  method: layer_thickness
+  thickness_variable: h
+  native_order: bottom_to_surface
+  inactive_level_indices: [0]
+  positive: down
+  reference: instantaneous_surface
+  observation_reference: instantaneous_surface
+  outside_column: missing
+  missing_values:
+    - -9998.0
+    - -9999.0
+
+# Optional derived variables use expressions evaluated from model fields.
+# derived_variables:
+#   chl:
+#     expression: "chlsc + chlnsc"
+
+# Map validation variables to model fields. conversion is a scalar applied to
+# the tracer only; it is never applied to depth geometry.
+variables:
+  oxy:
+    # Source: mmol O2 m-3; target: mL O2 L-1.
+    model_name: O2o
+    conversion: 0.0223914
+
+  nox:
+    # Target: umol L-1.
+    model_name: N3n
+    conversion: 1.0
+
+  nh4:
+    # Target: umol L-1.
+    model_name: N4n
+    conversion: 1.0
+
+  po4:
+    # Target: umol L-1.
+    model_name: N1p
+    conversion: 1.0
+
+  sio:
+    # Target: umol L-1.
+    model_name: N5s
+    conversion: 1.0
+
+  chl:
+    # Target: ug L-1.
+    model_name: Chla
+    conversion: 1.0
+
+  temp:
+    # Target: degrees Celsius.
+    model_name: temp
+    conversion: 1.0
+
+  sal:
+    # Target: dimensionless practical salinity.
+    model_name: salt
+    conversion: 1.0
+
+  talk:
+    # Target ICES unit: mEq L-1. The 0.001 factor is the established comparison
+    # convention; retain the source-unit and density caveat in interpretation.
+    model_name: Ac
+    conversion: 0.001

@@ -6,7 +6,7 @@ model:
 files:
   pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos4_carb/{year}/NoS_1.tsout3.nc" # Model output
   insitudatadir: "/hpcperm/bel9956/codeblue/ICESData_for_validation/" # ICES data
-  outdir: "/hpcperm/bel9956/codeblue/validation/nos4/" # Final tabular validations tables
+  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos4_carb/" # Final tabular validations tables
 
 # Ajust your model's coordinate names
 coordinates:
@@ -14,6 +14,23 @@ coordinates:
   lon: lon
   lat: lat
   vertical: lev
+
+# GETM native vertical-coordinate mapping. Layer thickness h reconstructs
+# instantaneous positive-down physical depths. GETM layers are stored from
+# bottom to surface, and index 0 is inactive padding.
+vertical_coordinate:
+  method: existing_z
+  depth_variable: z
+  thickness_variable: lev
+  native_order: bottom_to_surface
+  positive: up
+  reference: instantaneous_surface
+  observation_reference: instantaneous_surface
+  outside_column: missing
+  missing_values:
+    - -9998.0
+    - -9999.0
+
 
 # Ajust your model's variable names and (if necessary) the assoctiated conversion factor
 derived_variables:
