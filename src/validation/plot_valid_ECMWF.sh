@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=CB4_IcesExtract
+#SBATCH --job-name=CB4_PlSt
 #SBATCH --time=01:00:00
 #SBATCH --ntasks=1
 #SBATCH --qos=np

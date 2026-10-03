@@ -4,9 +4,9 @@ model:
   
 # Ajust your paths
 files:
-  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos4_carb/{year}/NoS_1.tsout3.nc" # Model output
+  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos5/{year}/NoS_1.avrgd3.nc" # Model output
   insitudatadir: "/hpcperm/bel9956/codeblue/ICESData_for_validation/" # ICES data
-  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos4_carb/" # Final tabular validations tables
+  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos5/" # Final tabular validations tables
 
 # Ajust your model's coordinate names
 coordinates:
@@ -36,8 +36,8 @@ vertical_coordinate:
 derived_variables:
   chl:
     expression: "chlsc + chlnsc"
-  # # secchi:
-  # #   expression: "1 / parattcoef" #!! to extract
+  sec:
+    expression: "1 / parattcoef"
   z:
     expression: " lev * depth "
 
@@ -74,12 +74,16 @@ variables:
     model_name: sal
     conversion: 1
 
-  # ph: #[-] # !!in avrgd3.nc
-  #   model_name: pH
-  #   conversion: 1
+  ph: #[-] 
+    model_name: pH
+    conversion: 1
     
   talk: #[mEq/l]
     model_name: alk
+    conversion: 1
+
+  sec: #[m]
+    model_name: sec
     conversion: 1
 
   

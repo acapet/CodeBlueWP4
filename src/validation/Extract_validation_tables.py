@@ -127,7 +127,8 @@ model_time_max = model_times.max()
 
 # This should contain the full list of validation variables
 #TODO: interface with validation.csv .. if needed
-vars = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal", "talk"]
+
+vars = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal", "talk",'ph','sec']
 match_summary_rows = []
 
 for var in vars:

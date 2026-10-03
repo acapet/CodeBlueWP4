@@ -18,11 +18,11 @@ import cartopy.feature as cf
 
 import datetime
 
-datadir = '/ec/res4/scratch/cvao/BGC/OUTPUTS/nos4_carb/'
+datadir = '/ec/res4/scratch/cvao/BGC/OUTPUTS/nos5/'
 regionfile = '/home/cvao/postprocessing-toolbox/NetCDF_manipulation/Geospatial/Bathymetry_NoS_with_regions_AC.nc'
 model = 'coherens'
-vars  = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal", "talk"]
-years = [2011]
+vars  = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal","ph",'sec', "talk"]
+years = [2010,2011]
 
 
 ######################"
@@ -118,10 +118,10 @@ def buildstatlist(dflt):
 #########################################
 
 def scatterplot(dflt,var):
-    fig = plt.figure(figsize = (18,6))
+    fig = plt.figure(figsize = (12,12))
 
     # Left panel wtih regions 
-    ax= fig.add_subplot(1,3,1)
+    ax= fig.add_subplot(2,2,1)
     
     dflt.plot.scatter(x=var,y='mod', c = 'reg', ax=ax, cmap=regcmap)
     ax.grid()
@@ -136,7 +136,7 @@ def scatterplot(dflt,var):
     ax. plot([xmin,xmax], [xmin,xmax], 'r--')
     
     # Depth
-    ax= fig.add_subplot(1,3,2)
+    ax= fig.add_subplot(2,2,2)
     
     dflt.plot.scatter(x=var,y='mod', c = 'depth', ax=ax, cmap=cm.deep)
     ax.grid()
@@ -151,8 +151,19 @@ def scatterplot(dflt,var):
     fig.suptitle(f'{var} - {model} - {year}')
     ax.plot([xmin,xmax], [xmin,xmax], 'r--')
 
+    # Map
+    ax= fig.add_subplot(2,2,3)
+
+    xreg.region_id.plot(cmap=regcmap,ax=ax)
+    # add label with centroid for each region
+    for reg in range(nreg):
+        xloc = xreg.where(xreg['region_id']==reg, drop=True)
+        latloc = xloc.lat.mean()
+        lonloc = xloc.lon.mean()
+        ax.text(lonloc,latloc,"%s"%reg, ha='center', va='center', weight='bold')
+
     # Month
-    ax= fig.add_subplot(1,3,3)
+    ax= fig.add_subplot(2,2,4)
 
     months = list(range(1, 13))
     month_labels = ['Jan','Feb','Mar','Apr','May','Jun',
@@ -231,6 +242,12 @@ def plot_region_stat(stats_df):
         
         # Plot each metric (use xarray's plot method with dynamic cmap and limits)
         metrics_ds[metric].plot(ax=axs[i], cmap=cmap, vmin=vmin, vmax=vmax, cbar_kwargs={'label': metric})
+        for reg in range(nreg):
+            xloc = xreg.where(xreg['region_id']==reg, drop=True)
+            latloc = xloc.lat.mean()
+            lonloc = xloc.lon.mean()
+            axs[i].text(lonloc,latloc,"%s"%reg, ha='center', va='center', weight='bold')
+
         
         # Set title for each subplot
         axs[i].set_title(f'{metric.capitalize()}')
@@ -278,9 +295,9 @@ def plot_timeseries(dflt, var):
     month_labels = ['Jan','Feb','Mar','Apr','May','Jun',
                     'Jul','Aug','Sep','Oct','Nov','Dec']
     
-    ncol = 1
+    ncol = 6
     
-    fig, axs = plt.subplots(int(np.ceil(nreg/ncol)), ncol, figsize=(10, 2*nreg), sharex=True)
+    fig, axs = plt.subplots(int(np.ceil(nreg/ncol)), ncol, figsize=(12, int(3*nreg/ncol)), sharex=True)
     axs = axs.flatten()
     
     for reg in range(nreg):
