@@ -22,12 +22,12 @@ datadir = '/ec/res4/scratch/cvao/BGC/OUTPUTS/nos5/'
 regionfile = '/home/cvao/postprocessing-toolbox/NetCDF_manipulation/Geospatial/Bathymetry_NoS_with_regions_AC.nc'
 model = 'coherens'
 vars  = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal","ph",'sec', "talk"]
-years = [2010,2011]
+years = [2010,2011,2012]
 
 
 ######################"
 
-def buildstatlist(dflt):
+def buildstatlist(dflt, year):
 
     Nmin = 5
     
@@ -117,7 +117,7 @@ def buildstatlist(dflt):
 
 #########################################
 
-def scatterplot(dflt,var):
+def scatterplot(dflt,var, year):
     fig = plt.figure(figsize = (12,12))
 
     # Left panel wtih regions 
@@ -192,7 +192,7 @@ def scatterplot(dflt,var):
     plt.close()
 
 ##############################
-def plot_region_stat(stats_df):
+def plot_region_stat(stats_df, year):
 
     # Initialize an empty dictionary to store metric data
     metric_data = {}
@@ -246,7 +246,7 @@ def plot_region_stat(stats_df):
             xloc = xreg.where(xreg['region_id']==reg, drop=True)
             latloc = xloc.lat.mean()
             lonloc = xloc.lon.mean()
-            axs[i].text(lonloc,latloc,"%s"%reg, ha='center', va='center', weight='bold')
+            axs[i].text(lonloc,latloc,"%s"%reg, ha='center', va='center', weight='bold', color='tab:orange')
 
         
         # Set title for each subplot
@@ -254,14 +254,14 @@ def plot_region_stat(stats_df):
     
     ax=axs[5]
     
-    ax.scatter(stats_df['cRMSD']/stats_df['obs_std']*np.sign(1-stats_df['model_std']/stats_df['obs_std'] ),
-                stats_df['bias']/stats_df['obs_std'], stats_df['N'], c = stats_df['region'], cmap=regcmap, alpha=0.7)
+#    ax.scatter(stats_df['cRMSD']/stats_df['obs_std']*np.sign(1-stats_df['model_std']/stats_df['obs_std'] ),
+#                stats_df['bias']/stats_df['obs_std'], stats_df['N'], c = stats_df['region'], cmap=regcmap, alpha=0.7)
     
     for reg in range(nreg):
         dloc = stats_df[stats_df.region==reg]
-        # ax.text(dloc['cRMSD'].item()/dloc['obs_std'].item()*np.sign(1-dloc['model_std'].item()/dloc['obs_std'].item()),
-        #     dloc['bias'].item()/dloc['obs_std'].item(),
-        #     '%s'%dloc['region'].item(), ha = 'center', va='center' )
+        ax.text(dloc['cRMSD'].item()/dloc['obs_std'].item()*np.sign(1-dloc['model_std'].item()/dloc['obs_std'].item()),
+            dloc['bias'].item()/dloc['obs_std'].item(),
+            '%s'%dloc['region'].item(), ha = 'center', va='center' )
     
     # Centering the axes and adding lines and circle
     scale=5
@@ -289,7 +289,7 @@ def plot_region_stat(stats_df):
 
 
 ##############################
-def plot_timeseries(dflt, var):
+def plot_timeseries(dflt, var,year):
     maxdepth = 20
     months = list(range(1, 13))
     month_labels = ['Jan','Feb','Mar','Apr','May','Jun',
@@ -373,6 +373,105 @@ def plot_timeseries(dflt, var):
     fig.savefig(datadir + 'Validation_Series_%s_%s.png'%(var, year))
     plt.close()
 
+def plot_timeseries(dflt, var, year, by_year=False, maxdepth=20, ncol=None):
+    month_labels = ['Jan','Feb','Mar','Apr','May','Jun',
+                    'Jul','Aug','Sep','Oct','Nov','Dec']
+
+    dsel = dflt[dflt['depth'] <= maxdepth].copy()
+
+    # ---- time axis definition ------------------------------------------
+    if by_year:
+        ym = dsel['datetime'].dt.to_period('M')
+        full = pd.period_range(ym.min(), ym.max(), freq='M')   # includes gaps
+        categories = [str(p) for p in full]                    # '2019-01', ...
+        dsel['tstep'] = pd.Categorical(ym.astype(str), categories=categories, ordered=True)
+
+        # only keep regions that have at least one point
+        regs = sorted(dsel['reg'].unique())
+        regs = [r for r in regs if r in range(nreg)]
+        ncol = ncol or 2
+    else:
+        categories = month_labels
+        dsel['tstep'] = pd.Categorical(
+            dsel['datetime'].dt.strftime('%b'),
+            categories=month_labels, ordered=True)
+        regs = list(range(nreg))
+        ncol = ncol or 6
+
+    n = len(categories)
+    npan = len(regs)
+    nrows = int(np.ceil(npan / ncol))
+
+    if by_year:
+        figsize = (min(8 * ncol, 40), 3 * nrows)
+    else:
+        figsize = (12, int(3 * nreg / ncol))
+
+    fig, axs = plt.subplots(nrows, ncol, figsize=figsize, sharex=True, squeeze=False)
+    axs = axs.flatten()
+
+    # ---- ticks ----------------------------------------------------------
+    if by_year:
+        jan_pos = [i for i, c in enumerate(categories) if c.endswith('-01')]
+        major_pos = jan_pos
+        major_lab = [categories[i][:4] for i in jan_pos]
+        minor_pos = [i - 0.5 for i in jan_pos]          # separators between years
+    else:
+        major_pos = list(range(12))
+        major_lab = month_labels
+        minor_pos = np.arange(0.5, 12.5, 1)
+
+    # ---- panels ---------------------------------------------------------
+    for ax, reg in zip(axs, regs):
+        dloc = dsel[dsel['reg'] == reg]
+
+        if not dloc.empty:
+            dmed = (dloc[['tstep', 'mod', var]]
+                    .groupby('tstep', observed=False).median()
+                    .reindex(categories))
+
+            dlong = dloc.melt(id_vars='tstep', value_vars=[var, 'mod'],
+                              var_name='variable', value_name='value')
+
+            sns.violinplot(data=dlong, x='tstep', y='value', hue='variable',
+                           ax=ax, palette={var: 'tab:blue', 'mod': 'tab:orange'},
+                           dodge=True, order=categories)
+
+            # medians drawn on integer positions (NaN -> gap in the line)
+            x = np.arange(n)
+            ax.plot(x, dmed[var].values, color='tab:blue', marker='.')
+            ax.plot(x, dmed['mod'].values, color='tab:orange', marker='.')
+
+        ax.set_title(f'Region {reg}')
+        ax.set_xlabel('')
+        ax.set_xticks(major_pos)
+        ax.set_xticklabels(major_lab)
+        ax.set_xticks(minor_pos, minor=True)
+        ax.grid(which='minor', axis='x', linestyle='-', alpha=0.3)
+        ax.grid(which='major', axis='y', linestyle='--', alpha=0.5)
+
+        if ax is not axs[0] and ax.get_legend():
+            ax.get_legend().remove()
+
+    # hide unused axes
+    for ax in axs[npan:]:
+        ax.set_visible(False)
+
+    # common y limits (consider both observations and model)
+    ymin = np.nanmin([dsel[var].min(), dsel['mod'].min()])
+    ymax = np.nanmax([dsel[var].max(), dsel['mod'].max()])
+    for ax in axs[:npan]:
+        ax.set_ylim(ymin, ymax)
+
+    # single legend for the whole figure
+    handles, labels = axs[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper right')
+
+    fig.tight_layout()
+    suffix = 'interannual' if by_year else 'seasonal'
+    fig.savefig(datadir + 'Validation_Series_%s_%s_%s.png' % (var, year, suffix))
+    plt.close()
+
 #######################################################################
 ## Load Region Files
 
@@ -394,6 +493,7 @@ if True:
 
 ## Loop on vars
 for var in vars: 
+    dflts=[]
     for year in years: 
 
 
@@ -415,13 +515,29 @@ for var in vars:
         for r in range(nreg):
             regdatacount[r] = dflt[dflt['reg'] == r].count()['lon']
 
-        stats_df=buildstatlist(dflt)
+        stats_df=buildstatlist(dflt, year)
 
-        scatterplot(dflt, var)
+        scatterplot(dflt, var, year)
 
-        plot_region_stat(stats_df)
+        plot_region_stat(stats_df, year)
 
-        plot_timeseries(dflt, var)
+        plot_timeseries(dflt, var, year)
+
+        dflts.append(dflt)
+
+    # All years
+    dflt=pd.concat(dflts)
+
+    year = f'{years[0]}-{years[-1]}'
+    regdatacount = np.zeros(nreg)
+    for r in range(nreg):
+        regdatacount[r] = dflt[dflt['reg'] == r].count()['lon']
+
+    stats_df=buildstatlist(dflt, year)
+    scatterplot(dflt, var, year)
+    plot_region_stat(stats_df, year)
+    plot_timeseries(dflt, var, year)    
+    plot_timeseries(dflt, var, year, by_year=True)    
 
 
 
