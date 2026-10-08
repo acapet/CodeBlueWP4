@@ -22,7 +22,7 @@ datadir = '/ec/res4/scratch/cvao/BGC/OUTPUTS/nos5/'
 regionfile = '/home/cvao/postprocessing-toolbox/NetCDF_manipulation/Geospatial/Bathymetry_NoS_with_regions_AC.nc'
 model = 'coherens'
 vars  = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal","ph",'sec', "talk"]
-years = [2010,2011,2012]
+years = [2010,2011,2012,2013]
 
 
 ######################"
@@ -259,6 +259,8 @@ def plot_region_stat(stats_df, year):
     
     for reg in range(nreg):
         dloc = stats_df[stats_df.region==reg]
+        if len(dloc)<=1:
+            continue
         ax.text(dloc['cRMSD'].item()/dloc['obs_std'].item()*np.sign(1-dloc['model_std'].item()/dloc['obs_std'].item()),
             dloc['bias'].item()/dloc['obs_std'].item(),
             '%s'%dloc['region'].item(), ha = 'center', va='center' )

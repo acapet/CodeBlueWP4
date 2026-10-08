@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=CB4_IcesExtract
+#SBATCH --job-name=CB4_ExSta
 #SBATCH --time=01:00:00
 #SBATCH --ntasks=1
 #SBATCH --qos=np
@@ -7,7 +7,7 @@
 set -euo pipefail
 
 MOD=coherens
-YEAR=2012
+YEAR=2010
 SCENARIO=BASE
 
 module load conda

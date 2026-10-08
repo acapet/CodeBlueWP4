@@ -4,9 +4,9 @@ model:
   
 # Ajust your paths
 files:
-  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos3_1/{year}/NoS_1.tsout3.nc" # Model output
-  stations: "/home/bel9956/CodeBlueWP4/src/stations/stations.csv" # Station list
-  outdir: "/hpcperm/bel9956/codeblue/stations/" # Final netcdf stations tables
+  pattern: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos5/{year}/NoS_1.avrgd3.nc" # Model output
+  stations: "/hpcperm/bel9956/codeblue/ICESData_for_stations/" # ICES data
+  outdir: "/ec/res4/hpcperm/cvao/BGC/OUTPUTS/nos5/" # Final tabular validations tables
 
 # Ajust your model's coordinate names
 coordinates:
@@ -15,12 +15,28 @@ coordinates:
   lat: lat
   vertical: lev
 
+# GETM native vertical-coordinate mapping. Layer thickness h reconstructs
+# instantaneous positive-down physical depths. GETM layers are stored from
+# bottom to surface, and index 0 is inactive padding.
+vertical_coordinate:
+  method: existing_z
+  depth_variable: z
+  thickness_variable: lev
+  native_order: bottom_to_surface
+  positive: up
+  reference: instantaneous_surface
+  observation_reference: instantaneous_surface
+  outside_column: missing
+  missing_values:
+    - -9998.0
+    - -9999.0
+
 # Ajust your model's variable names and (if necessary) the assoctiated conversion factor
 derived_variables:
   chl:
     expression: "chlsc + chlnsc"
-  # # secchi:
-  # #   expression: "1 / parattcoef" #!! to extract
+  sec:
+    expression: "1 / parattcoef"
   z:
     expression: " lev * depth "
 
@@ -57,11 +73,14 @@ variables:
     model_name: sal
     conversion: 1
 
-  # ph: #[-] # !!in avrgd3.nc
-  #   model_name: pH
-  #   conversion: 1
+  ph: #[-] 
+    model_name: pH
+    conversion: 1
     
   talk: #[mEq/l]
     model_name: alk
     conversion: 1
 
+  
+    
+  
