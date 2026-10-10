@@ -26,15 +26,13 @@ Where to find what?
 * `scr/validation`: postprocessing scripts to produce **Validation Tables**.
 * `scr/stations`: postprocessing scripts to produce **Station Files**.
 
-## Required modules
-
-See `requirements.txt`.
-
 ## Environment setup
 
 Create your environment via:  
+
 _module load conda_  
 _conda env create -f `environment.yml`_
 
 to just update the conda environment after modification of the environment.yml:
+
 _conda env update --file environment.yml  --prune_
