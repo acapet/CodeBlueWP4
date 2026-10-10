@@ -1,0 +1,60 @@
+model:
+  name: GETM_ERSEM_BFM_ORAS5_update
+
+files:
+  pattern: "/export/lv9/user/klarsen/model_out/CodeBlue_validation/data/model_input/ORAS5_update.3d.nc"
+  insitudatadir: "/export/lv9/user/klarsen/model_out/CodeBlue_validation/data/ICES/ICESData_for_validation/"
+  outdir: "/export/lv9/user/klarsen/model_out/CodeBlue_validation/runs/ORAS5_run/tables/"
+
+coordinates:
+  time: time
+  lon: lonc
+  lat: latc
+  vertical: level
+
+vertical_coordinate:
+  method: layer_thickness
+  thickness_variable: h
+  native_order: bottom_to_surface
+  inactive_level_indices: [0]
+  positive: down
+  reference: instantaneous_surface
+  observation_reference: instantaneous_surface
+  outside_column: missing
+  missing_values:
+    - -9998.0
+    - -9999.0
+
+# Keep these mappings and conversions identical to the original 2014
+# candidate so the comparison measures model-output differences. The oxygen
+# interpretation remains unit-provisional. The alkalinity factor is the fixed
+# comparison convention; it is not a correction of the conflicting NetCDF
+# units metadata.
+variables:
+  oxy:
+    model_name: O2o
+    conversion: 0.0223914 #Conversion factor for mmol O2/m3 to ml O2/L
+  nox:
+    model_name: N3n
+    conversion: 1
+  nh4:
+    model_name: N4n
+    conversion: 1
+  po4:
+    model_name: N1p
+    conversion: 1
+  sio:
+    model_name: N5s
+    conversion: 1
+  chl:
+    model_name: Chla
+    conversion: 1
+  temp:
+    model_name: temp
+    conversion: 1
+  sal:
+    model_name: salt
+    conversion: 1
+  talk:
+    model_name: Ac
+    conversion: 0.001
