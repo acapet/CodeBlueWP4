@@ -71,7 +71,7 @@ verbose = args.verbose
 write_match_diagnostics = args.match_diagnostics
 
 # Load model configuration 
-with open("%s.yml"%modelid) as f:
+with open("../modelspecifics/%s.yml"%modelid) as f:
     cfg = yaml.safe_load(f)
 
 # Loading Model data    

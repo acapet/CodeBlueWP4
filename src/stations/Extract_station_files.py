@@ -132,7 +132,7 @@ def distance_km(lon1, lat1, lon2, lat2):
 
 
 # Load model configuration 
-with open("%s.yml"%modelid) as f:
+with open("../modelspecifics/%s.yml"%modelid) as f:
     cfg = yaml.safe_load(f)
 
 # Loading model output    
