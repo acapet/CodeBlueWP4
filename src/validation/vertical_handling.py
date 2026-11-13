@@ -8,11 +8,8 @@ model data.  Model-specific variable names and conventions remain in YAML.
 
 from __future__ import annotations
 
-import argparse
-from pathlib import Path
 import numpy as np
 import xarray as xr
-import yaml
 from xgcm import Grid
 
 
@@ -22,7 +19,10 @@ TIER1_METHODS = {
     "interface_variable",
     "depth_variable",
     "fixed_depth",
+    "sigma_fraction",
+    "roms_s_coordinate",
 }
+
 
 _SURFACE_TO_BOTTOM = {"surface_to_bottom", "top_to_bottom"}
 _BOTTOM_TO_SURFACE = {"bottom_to_surface", "bottom_to_top"}
@@ -60,6 +60,16 @@ def vertical_input_names(vertical_config: dict | None) -> list[str]:
         required = [config["thickness_variable"]]
     elif method == "interface_variable":
         required = [config["interface_variable"]]
+    elif method == "sigma_fraction":
+        required = [config["center_variable"], config["interface_variable"]]
+    elif method == "roms_s_coordinate":
+        required = [
+            config["center_variable"],
+            config["center_stretching_variable"],
+            config["interface_variable"],
+            config["interface_stretching_variable"],
+            config["bathymetry_variable"],
+        ]
     else:
         required = [config.get("depth_variable", config.get("z_variable", "z"))]
 
@@ -70,6 +80,10 @@ def vertical_input_names(vertical_config: dict | None) -> list[str]:
         "surface_variable",
         "bathymetry_variable",
         "sea_surface_elevation_variable",
+        "scale_variable",
+        "wet_mask_variable",
+        "hc_variable",
+        "vtransform_variable",
     )
     required.extend(config[key] for key in optional_keys if config.get(key))
     return list(dict.fromkeys(required))
@@ -197,6 +211,188 @@ def _configured_bottom(
     return _normalize_depth_sign(
         bottom, config.get("bottom_depth_positive", "down")
     )
+
+
+def _configured_wet_levels(
+    dataset: xr.Dataset, config: dict, vertical_dim: str
+) -> xr.DataArray | None:
+    """Return an optional native wet mask in surface-to-bottom order."""
+    name = config.get("wet_mask_variable")
+    if not name:
+        return None
+    if name not in dataset:
+        raise KeyError(f"Wet-mask variable {name!r} was not found")
+
+    source = _mask_missing(dataset[name], config)
+    if "wet_mask_value" in config:
+        wet = source == config["wet_mask_value"]
+    else:
+        wet = xr.apply_ufunc(np.isfinite, source, dask="allowed")
+    if vertical_dim in wet.dims:
+        wet = _select_active(wet, vertical_dim, config)
+        wet = _surface_to_bottom(wet, vertical_dim, config)
+    return wet
+
+
+def _column_bottom_from_wet_levels(
+    z_interface: xr.DataArray,
+    wet_levels: xr.DataArray,
+    vertical_dim: str,
+) -> tuple[xr.DataArray, xr.DataArray]:
+    """Derive local bottom from one contiguous wet prefix per column."""
+    interface_dims = [
+        dim
+        for dim in z_interface.dims
+        if z_interface.sizes[dim] == wet_levels.sizes[vertical_dim] + 1
+    ]
+    if len(interface_dims) != 1:
+        raise ValueError("Could not identify the fixed-depth interface dimension")
+    interface_dim = interface_dims[0]
+
+    wet_count = wet_levels.sum(vertical_dim).astype(np.int64)
+    position = xr.DataArray(
+        np.arange(wet_levels.sizes[vertical_dim]),
+        dims=(vertical_dim,),
+        coords={vertical_dim: wet_levels[vertical_dim]},
+    )
+    expected = position < wet_count
+    contiguous = (wet_levels == expected).all(vertical_dim) & (wet_count > 0)
+    bottom = z_interface.isel({interface_dim: wet_count}).where(contiguous)
+    return bottom.rename("model_bottom_depth"), contiguous
+
+
+def _sigma_fraction_coordinates(
+    dataset: xr.Dataset, config: dict, vertical_dim: str
+) -> tuple[xr.DataArray, xr.DataArray, xr.DataArray, xr.DataArray]:
+    """Convert dimensionless surface-to-bottom fractions to metre depths."""
+    center_name = config["center_variable"]
+    interface_name = config["interface_variable"]
+    scale_name = config.get("scale_variable", config.get("bottom_depth_variable"))
+    if not scale_name:
+        raise KeyError(
+            "sigma_fraction requires scale_variable or bottom_depth_variable"
+        )
+    for name in (center_name, interface_name, scale_name):
+        if name not in dataset:
+            raise KeyError(f"Sigma-coordinate input {name!r} was not found")
+
+    center_fraction = _select_active(dataset[center_name], vertical_dim, config)
+    center_fraction = _surface_to_bottom(center_fraction, vertical_dim, config)
+    center_fraction = _mask_missing(center_fraction, config)
+
+    interface_fraction = _mask_missing(dataset[interface_name], config)
+    interface_dim = _interface_dimension(
+        interface_fraction, dataset, config, vertical_dim
+    )
+    interface_fraction = _surface_to_bottom(
+        interface_fraction, interface_dim, config
+    )
+
+    scale = _mask_missing(dataset[scale_name], config)
+    if vertical_dim in scale.dims or interface_dim in scale.dims:
+        raise ValueError("Sigma depth scale must not use a vertical dimension")
+    scale = _normalize_depth_sign(
+        scale, config.get("scale_positive", config.get("bottom_depth_positive", "down"))
+    )
+
+    z_center = (center_fraction * scale).rename("z_center")
+    z_interface = (interface_fraction * scale).rename("z_interface")
+    bottom = z_interface.isel({interface_dim: -1}, drop=True).rename(
+        "model_bottom_depth"
+    )
+    wet = (
+        xr.apply_ufunc(np.isfinite, z_center, dask="allowed").all(vertical_dim)
+        & xr.apply_ufunc(np.isfinite, z_interface, dask="allowed").all(interface_dim)
+        & (z_interface.diff(interface_dim) > 0.0).all(interface_dim)
+    )
+    return z_center, z_interface, bottom, wet
+
+
+def _scalar_from_config_or_dataset(
+    dataset: xr.Dataset,
+    config: dict,
+    value_key: str,
+    variable_key: str,
+) -> xr.DataArray | float:
+    if value_key in config:
+        return float(config[value_key])
+    name = config.get(variable_key)
+    if not name or name not in dataset:
+        raise KeyError(f"Configure {value_key} or an existing {variable_key}")
+    value = dataset[name]
+    if value.size != 1:
+        raise ValueError(f"{name!r} must contain one scalar value")
+    return value.squeeze()
+
+
+def _roms_depth(
+    s: xr.DataArray,
+    stretching: xr.DataArray,
+    bathymetry: xr.DataArray,
+    elevation: xr.DataArray,
+    hc: xr.DataArray | float,
+    vtransform: int,
+) -> xr.DataArray:
+    if vtransform == 1:
+        z0 = hc * s + (bathymetry - hc) * stretching
+        z = z0 + elevation * (1.0 + z0 / bathymetry)
+    elif vtransform == 2:
+        z0 = (hc * s + bathymetry * stretching) / (hc + bathymetry)
+        z = elevation + (elevation + bathymetry) * z0
+    else:
+        raise ValueError("ROMS Vtransform must be 1 or 2")
+    return elevation - z
+
+
+def _roms_s_coordinates(
+    dataset: xr.Dataset, config: dict, vertical_dim: str
+) -> tuple[xr.DataArray, xr.DataArray, xr.DataArray, xr.DataArray]:
+    """Decode standard ROMS/CROCO s-coordinates to positive-down metres."""
+    h = _mask_missing(dataset[config["bathymetry_variable"]], config)
+    h = _normalize_depth_sign(h, config.get("bathymetry_positive", "down"))
+    elevation_name = config.get("sea_surface_elevation_variable")
+    elevation = (
+        _mask_missing(dataset[elevation_name], config)
+        if elevation_name
+        else xr.zeros_like(h)
+    )
+    hc = _scalar_from_config_or_dataset(
+        dataset, config, "hc_value", "hc_variable"
+    )
+    vtransform = int(
+        _scalar_from_config_or_dataset(
+            dataset, config, "vtransform_value", "vtransform_variable"
+        )
+    )
+
+    s_center = _select_active(dataset[config["center_variable"]], vertical_dim, config)
+    c_center = _select_active(
+        dataset[config["center_stretching_variable"]], vertical_dim, config
+    )
+    s_center = _surface_to_bottom(s_center, vertical_dim, config)
+    c_center = _surface_to_bottom(c_center, vertical_dim, config)
+
+    s_interface = dataset[config["interface_variable"]]
+    c_interface = dataset[config["interface_stretching_variable"]]
+    interface_dim = _interface_dimension(s_interface, dataset, config, vertical_dim)
+    s_interface = _surface_to_bottom(s_interface, interface_dim, config)
+    c_interface = _surface_to_bottom(c_interface, interface_dim, config)
+
+    z_center = _roms_depth(
+        s_center, c_center, h, elevation, hc, vtransform
+    ).rename("z_center")
+    z_interface = _roms_depth(
+        s_interface, c_interface, h, elevation, hc, vtransform
+    ).rename("z_interface")
+    bottom = z_interface.isel({interface_dim: -1}, drop=True).rename(
+        "model_bottom_depth"
+    )
+    wet = (
+        xr.apply_ufunc(np.isfinite, z_center, dask="allowed").all(vertical_dim)
+        & xr.apply_ufunc(np.isfinite, z_interface, dask="allowed").all(interface_dim)
+        & (z_interface.diff(interface_dim) > 0.0).all(interface_dim)
+    )
+    return z_center, z_interface, bottom, wet
 
 
 def _interfaces_from_centers(
@@ -397,6 +593,14 @@ def prepare_vertical_coordinates(
             interface_dim
         )
         wet = interface_valid & increasing_interfaces
+    elif method == "sigma_fraction":
+        z_center, z_interface, bottom, wet = _sigma_fraction_coordinates(
+            profile_dataset, config, vertical_dim
+        )
+    elif method == "roms_s_coordinate":
+        z_center, z_interface, bottom, wet = _roms_s_coordinates(
+            profile_dataset, config, vertical_dim
+        )
     else:
         variable = config.get("depth_variable", config.get("z_variable", "z"))
         z_center, z_interface, bottom = _normalize_centers(
@@ -407,10 +611,31 @@ def prepare_vertical_coordinates(
             vertical_dim
         )
 
+    configured_wet = _configured_wet_levels(
+        profile_dataset, config, vertical_dim
+    )
+    if configured_wet is not None:
+        if vertical_dim in configured_wet.dims:
+            if config.get("allow_trailing_missing_levels", False):
+                bottom, contiguous = _column_bottom_from_wet_levels(
+                    z_interface, configured_wet, vertical_dim
+                )
+                wet = wet & contiguous
+            else:
+                wet = wet & configured_wet.all(vertical_dim)
+        else:
+            wet = wet & configured_wet
+
     increasing = (z_center.diff(vertical_dim) > 0.0).all(vertical_dim)
     nonnegative = (z_center >= 0.0).all(vertical_dim)
+    if config.get("allow_trailing_missing_levels", False):
+        deepest_center = z_center.where(z_center <= bottom).max(
+            vertical_dim, skipna=True
+        )
+    else:
+        deepest_center = z_center.isel({vertical_dim: -1}, drop=True)
     bottom_valid = xr.apply_ufunc(np.isfinite, bottom, dask="allowed") & (
-        bottom >= z_center.isel({vertical_dim: -1}, drop=True)
+        bottom >= deepest_center
     )
     wet = (wet & increasing & nonnegative & bottom_valid).rename("wet_profile")
 
@@ -424,6 +649,7 @@ def prepare_vertical_coordinates(
 def _prepare_tracer_profile(
     tracer: xr.DataArray,
     z_center: xr.DataArray,
+    model_bottom_depth: xr.DataArray | None,
     wet_profile: xr.DataArray,
     vertical_dim: str,
     config: dict,
@@ -434,92 +660,46 @@ def _prepare_tracer_profile(
     tracer = _mask_missing(tracer, config)
     tracer, z_center = xr.align(tracer, z_center, join="exact")
 
-    finite_tracer = xr.apply_ufunc(np.isfinite, tracer, dask="allowed").all(
-        vertical_dim
-    )
+    finite_levels = xr.apply_ufunc(np.isfinite, tracer, dask="allowed")
+    if config.get("allow_trailing_missing_levels", False):
+        if model_bottom_depth is None:
+            raise ValueError(
+                "allow_trailing_missing_levels requires model bottom depth"
+            )
+        required_levels = z_center <= model_bottom_depth
+        finite_tracer = (finite_levels | ~required_levels).all(vertical_dim)
+
+        def fill_trailing(values):
+            result = np.array(values, copy=True)
+            valid = np.isfinite(result)
+            if valid.any():
+                result[np.flatnonzero(valid)[-1] + 1 :] = result[valid][-1]
+            return result
+
+        tracer = xr.apply_ufunc(
+            fill_trailing,
+            tracer,
+            input_core_dims=[[vertical_dim]],
+            output_core_dims=[[vertical_dim]],
+            vectorize=True,
+            dask="parallelized",
+            output_dtypes=[tracer.dtype],
+            dask_gufunc_kwargs={"allow_rechunk": True},
+        )
+    else:
+        finite_tracer = finite_levels.all(vertical_dim)
     valid_profile = wet_profile & finite_tracer
     return tracer, z_center, finite_tracer, valid_profile
 
 
-def observation_match_diagnostics(
+def _interpolate_prepared_profile(
     tracer: xr.DataArray,
     observation_depth: xr.DataArray,
     z_center: xr.DataArray,
     model_bottom_depth: xr.DataArray,
-    wet_profile: xr.DataArray,
+    valid_profile: xr.DataArray,
     vertical_dim: str,
-    vertical_config: dict | None,
-    transformed: xr.DataArray,
-) -> xr.Dataset:
-    """Return diagnostic masks explaining whether a collocation can succeed.
-
-    These masks describe inputs to the existing transform; they do not fill or
-    alter any model value. Horizontal bounding-box and time-range exclusions
-    are assigned by the caller before profiles reach this function.
-    """
-    config = _config(vertical_config)
-    _require_tier1(config)
-    _, _, finite_tracer, _ = _prepare_tracer_profile(
-        tracer, z_center, wet_profile, vertical_dim, config
-    )
-
-    finite_depth = xr.apply_ufunc(
-        np.isfinite, observation_depth, dask="allowed"
-    )
-    finite_bottom = xr.apply_ufunc(
-        np.isfinite, model_bottom_depth, dask="allowed"
-    )
-    valid_model_column = wet_profile & finite_bottom
-    above_surface = finite_depth & (observation_depth < 0.0)
-    below_bottom = (
-        finite_depth
-        & valid_model_column
-        & (observation_depth > model_bottom_depth)
-    )
-    within_vertical_bounds = (
-        finite_depth
-        & valid_model_column
-        & (observation_depth >= 0.0)
-        & (observation_depth <= model_bottom_depth)
-    )
-
-    return xr.Dataset(
-        {
-            "valid_model_column": valid_model_column,
-            "finite_tracer_profile": finite_tracer,
-            "above_model_surface": above_surface,
-            "below_model_bottom": below_bottom,
-            "within_vertical_bounds": within_vertical_bounds,
-            "transformed_finite": xr.apply_ufunc(
-                np.isfinite, transformed, dask="allowed"
-            ),
-            "model_bottom_depth": model_bottom_depth,
-        }
-    )
-
-
-def interpolate_to_observation_depths(
-    tracer: xr.DataArray,
-    observation_depth: xr.DataArray,
-    z_center: xr.DataArray,
-    model_bottom_depth: xr.DataArray,
-    wet_profile: xr.DataArray,
-    vertical_dim: str,
-    vertical_config: dict | None,
 ) -> xr.DataArray:
-    """Transform collocated profiles to one physical depth per observation."""
-    config = _config(vertical_config)
-    _require_tier1(config)
-    if config["observation_reference"] not in _INSTANTANEOUS_SURFACE:
-        raise NotImplementedError(
-            "Tier 1 requires observation depths below the instantaneous surface"
-        )
-    if config["outside_column"] != "missing":
-        raise NotImplementedError("Tier 1 supports outside_column: missing only")
-
-    tracer, z_center, _, valid_profile = _prepare_tracer_profile(
-        tracer, z_center, wet_profile, vertical_dim, config
-    )
     tracer = tracer.where(valid_profile).chunk({vertical_dim: -1})
     z_center = z_center.where(valid_profile).chunk({vertical_dim: -1})
 
@@ -554,180 +734,93 @@ def interpolate_to_observation_depths(
     return transformed.where(valid_profile & physical_bounds).rename(tracer.name)
 
 
-def _derived_variables(dataset: xr.Dataset, config: dict) -> xr.Dataset:
-    """Evaluate trusted legacy YAML expressions for read-only check mode."""
-    import re
-
-    result = dataset
-    for new_name, specification in config.get("derived_variables", {}).items():
-        expression = specification["expression"]
-        for name in list(result.data_vars) + list(result.coords):
-            expression = re.sub(
-                rf"\b{re.escape(name)}\b", f"result[{name!r}]", expression
-            )
-        result[new_name] = eval(expression, {"__builtins__": {}}, {"result": result})
-    return result
-
-
-def _sample_indexers(dataset: xr.Dataset, vertical_dim: str) -> dict[str, list[int]]:
-    indexers = {}
-    for dim, size in dataset.sizes.items():
-        if dim == vertical_dim:
-            continue
-        values = sorted(set((0, size // 2, size - 1)))
-        indexers[dim] = values
-    return indexers
-
-
-def check_configuration(config_path: Path, year: int) -> None:
-    """Run a read-only sampled vertical configuration check."""
-    with config_path.open() as stream:
-        config = yaml.safe_load(stream)
-    vertical = _config(config.get("vertical_coordinate"))
-    method = _require_tier1(vertical)
-    vertical_dim = config["coordinates"]["vertical"]
-    model_path = Path(config["files"]["pattern"].format(year=year))
-    if not model_path.is_file():
-        raise FileNotFoundError(model_path)
-
-    source = xr.open_dataset(model_path, chunks={})
-    try:
-        source = _derived_variables(source, config)
-        model_variable_specs = {}
-        for specification in config.get("variables", {}).values():
-            name = specification.get("model_name")
-            if name in source and name not in model_variable_specs:
-                model_variable_specs[name] = specification
-        model_variables = list(model_variable_specs)
-        if not model_variables:
-            raise KeyError("No configured validation tracer exists in the model file")
-        required = vertical_input_names(vertical)
-        missing = [name for name in required if name not in source]
-        if missing:
-            raise KeyError(f"Missing configured vertical inputs: {missing}")
-
-        selected = source[list(dict.fromkeys(model_variables + required))]
-        selected = selected.isel(_sample_indexers(selected, vertical_dim))
-        selected = mask_vertical_inputs(selected, vertical)
-        z_center, z_interface, bottom, wet = prepare_vertical_coordinates(
-            selected, vertical, vertical_dim
+def interpolate_with_diagnostics(
+    tracer: xr.DataArray,
+    observation_depth: xr.DataArray,
+    z_center: xr.DataArray,
+    model_bottom_depth: xr.DataArray,
+    wet_profile: xr.DataArray,
+    vertical_dim: str,
+    vertical_config: dict | None,
+) -> xr.Dataset:
+    """Interpolate once and return the value with its diagnostic masks."""
+    config = _config(vertical_config)
+    _require_tier1(config)
+    if config["observation_reference"] not in _INSTANTANEOUS_SURFACE:
+        raise NotImplementedError(
+            "Tier 1 requires observation depths below the instantaneous surface"
         )
+    if config["outside_column"] != "missing":
+        raise NotImplementedError("Tier 1 supports outside_column: missing only")
 
-        tracer_profile_counts = {}
-        masked_tracers = {}
-        for name, specification in model_variable_specs.items():
-            tracer_config = dict(vertical)
-            tracer_config["missing_values"] = specification.get(
-                "missing_values", vertical.get("missing_values", [])
-            )
-            masked, _, finite_profile, _ = _prepare_tracer_profile(
-                selected[name], z_center, wet, vertical_dim, tracer_config
-            )
-            count = int((wet & finite_profile).sum().compute())
-            tracer_profile_counts[name] = count
-            masked_tracers[name] = masked
+    tracer, z_center, finite_tracer, valid_profile = _prepare_tracer_profile(
+        tracer,
+        z_center,
+        model_bottom_depth,
+        wet_profile,
+        vertical_dim,
+        config,
+    )
+    transformed = _interpolate_prepared_profile(
+        tracer,
+        observation_depth,
+        z_center,
+        model_bottom_depth,
+        valid_profile,
+        vertical_dim,
+    )
 
-        tracer_name = max(tracer_profile_counts, key=tracer_profile_counts.get)
-        if tracer_profile_counts[tracer_name] == 0:
-            raise ValueError(
-                "No sampled wet column has a complete configured tracer profile; "
-                f"counts={tracer_profile_counts}"
-            )
-        selected_tracer = masked_tracers[tracer_name]
+    finite_depth = xr.apply_ufunc(
+        np.isfinite, observation_depth, dask="allowed"
+    )
+    finite_bottom = xr.apply_ufunc(
+        np.isfinite, model_bottom_depth, dask="allowed"
+    )
+    valid_model_column = wet_profile & finite_bottom
+    above_surface = finite_depth & (observation_depth < 0.0)
+    below_bottom = (
+        finite_depth
+        & valid_model_column
+        & (observation_depth > model_bottom_depth)
+    )
 
-        # Match the production extractor contract: one vertical profile and
-        # one target depth per ``points`` element.  Broadcast static geometry
-        # across tracer dimensions before stacking so this also works when a
-        # depth or bottom variable has no time dimension.
-        tracer_for_transform, z_for_transform = xr.broadcast(
-            selected_tracer, z_center
-        )
-        profile_template = tracer_for_transform.isel(
-            {vertical_dim: 0}, drop=True
-        )
-        bottom_for_transform = bottom.broadcast_like(profile_template)
-        wet_for_transform = wet.broadcast_like(profile_template)
-        profile_dims = list(profile_template.dims)
-        tracer_for_transform = tracer_for_transform.stack(points=profile_dims)
-        z_for_transform = z_for_transform.stack(points=profile_dims)
-        bottom_for_transform = bottom_for_transform.stack(points=profile_dims)
-        wet_for_transform = wet_for_transform.stack(points=profile_dims)
-
-        chunks = tracer_for_transform.chunksizes.get(vertical_dim, ())
-        print(f"Configuration: {config_path}")
-        print(f"Model file: {model_path}")
-        print(f"Method: {method}")
-        print(f"Tracer: {tracer_name}; dimensions={selected_tracer.dims}")
-        print(f"Complete wet tracer profiles: {tracer_profile_counts}")
-        print(f"Required vertical variables: {required}")
-        print(
-            "Native order: "
-            f"{vertical.get('native_order', vertical.get('layer_order', 'surface_to_bottom'))}"
-        )
-        print(f"Normalized center range: {float(z_center.min().compute())} to {float(z_center.max().compute())} m")
-        print(f"Bottom-depth range: {float(bottom.min().compute())} to {float(bottom.max().compute())} m")
-        print(
-            "Wet sampled profiles: "
-            f"{int(wet_for_transform.sum().compute())} / {wet_for_transform.size}"
-        )
-        print(f"Vertical chunks before transform: {chunks or 'unchunked'}")
-        if z_interface is not None:
-            print(f"Interface dimensions: {z_interface.dims}")
-
-        if method == "layer_thickness":
-            thickness = selected[vertical["thickness_variable"]]
-            print(f"Thickness range: {float(thickness.min().compute())} to {float(thickness.max().compute())} m")
-            bathymetry_name = vertical.get("bathymetry_variable")
-            elevation_name = vertical.get("sea_surface_elevation_variable")
-            if bathymetry_name and elevation_name:
-                expected = selected[bathymetry_name] + selected[elevation_name]
-                residual = bottom - expected
-                maximum = float(abs(residual).max(skipna=True).compute())
-                tolerance = float(vertical.get("water_depth_tolerance_m", 0.05))
-                print(f"max(abs(sum(h)-bathymetry-elevation)): {maximum} m")
-                if maximum > tolerance:
-                    print(f"WARNING: water-depth residual exceeds {tolerance} m")
-
-        target = 0.5 * bottom_for_transform
-        transformed = interpolate_to_observation_depths(
-            tracer_for_transform,
-            target,
-            z_for_transform,
-            bottom_for_transform,
-            wet_for_transform,
-            vertical_dim,
-            vertical,
-        )
-        finite = int(
-            xr.apply_ufunc(
+    return xr.Dataset(
+        {
+            "mod": transformed,
+            "valid_model_column": valid_model_column,
+            "finite_tracer_profile": finite_tracer,
+            "above_model_surface": above_surface,
+            "below_model_bottom": below_bottom,
+            "within_vertical_bounds": (
+                finite_depth
+                & valid_model_column
+                & (observation_depth >= 0.0)
+                & (observation_depth <= model_bottom_depth)
+            ),
+            "transformed_finite": xr.apply_ufunc(
                 np.isfinite, transformed, dask="allowed"
-            ).sum().compute()
-        )
-        print(f"XGCM sample transform finite results: {finite} / {transformed.size}")
-        if finite == 0:
-            raise ValueError(
-                "The sampled configuration produced no finite XGCM transforms"
-            )
-        print("CHECK PASSED (read-only; no NetCDF or Parquet written)")
-    finally:
-        source.close()
+            ),
+            "model_bottom_depth": model_bottom_depth,
+        }
+    )
 
 
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("configuration", type=Path, help="model YAML file")
-    parser.add_argument("year", type=int)
-    parser.add_argument("--check", action="store_true", help="run read-only checks")
-    return parser.parse_args()
-
-
-def main() -> int:
-    args = _parse_args()
-    if not args.check:
-        raise SystemExit("vertical_handling.py is standalone only with --check")
-    check_configuration(args.configuration, args.year)
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+def interpolate_to_observation_depths(
+    tracer: xr.DataArray,
+    observation_depth: xr.DataArray,
+    z_center: xr.DataArray,
+    model_bottom_depth: xr.DataArray,
+    wet_profile: xr.DataArray,
+    vertical_dim: str,
+    vertical_config: dict | None,
+) -> xr.DataArray:
+    """Return only the interpolated value for callers that do not need diagnostics."""
+    return interpolate_with_diagnostics(
+        tracer,
+        observation_depth,
+        z_center,
+        model_bottom_depth,
+        wet_profile,
+        vertical_dim,
+        vertical_config,
+    )["mod"].rename(tracer.name)

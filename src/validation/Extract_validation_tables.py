@@ -24,9 +24,8 @@ import argparse
 from pathlib import Path
 
 from vertical_handling import (
-    interpolate_to_observation_depths,
+    interpolate_with_diagnostics,
     mask_vertical_inputs,
-    observation_match_diagnostics,
     prepare_vertical_coordinates,
     vertical_input_names,
 )
@@ -262,7 +261,7 @@ for var in vars:
         z_center, z_interface, model_bottom_depth, wet_profile = (
             prepare_vertical_coordinates(tmp, vertical_cfg, lev_dim)
         )
-        result = interpolate_to_observation_depths(
+        computed = interpolate_with_diagnostics(
             tmp[mvar],
             depths,
             z_center,
@@ -270,20 +269,7 @@ for var in vars:
             wet_profile,
             lev_dim,
             vertical_cfg,
-        )
-        diagnostics = observation_match_diagnostics(
-            tmp[mvar],
-            depths,
-            z_center,
-            model_bottom_depth,
-            wet_profile,
-            lev_dim,
-            vertical_cfg,
-            result,
-        )
-
-        # Compute the model result and its diagnostic masks in the same graph.
-        computed = diagnostics.assign(mod=result).compute()
+        ).compute()
         dflt.loc[dwork.index, "mod"] = computed["mod"].values
 
     if write_match_diagnostics:
