@@ -61,6 +61,21 @@ def load_validation_config(path: Path) -> LoadedValidationConfig:
     return LoadedValidationConfig(values=values, path=config_path)
 
 
+def add_derived_variables(dataset: xr.Dataset, config: dict) -> xr.Dataset:
+    """Add reviewed derived variables using model fields as the namespace."""
+    for name, specification in config.get("derived_variables", {}).items():
+        namespace = {
+            variable: dataset[variable]
+            for variable in list(dataset.data_vars) + list(dataset.coords)
+        }
+        dataset[name] = eval(
+            specification["expression"],
+            {"__builtins__": {}},
+            namespace,
+        )
+    return dataset
+
+
 def resolve_periods(
     year: int,
     months: list[int] | tuple[int, ...] | None = None,

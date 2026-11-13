@@ -21,7 +21,6 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import argparse
-import re
 from pathlib import Path
 
 from vertical_handling import (
@@ -32,6 +31,7 @@ from vertical_handling import (
     vertical_input_names,
 )
 from validation_input import (
+    add_derived_variables,
     file_sha256,
     load_validation_config,
     observation_paths,
@@ -101,27 +101,10 @@ if verbose:
         f"{opened_model.duplicate_times_removed}"
     )
 
-# Compute composite variables ###
-for newvar, spec in cfg.get("derived_variables", {}).items():
-    if verbose : print("  Computing %s as :"%newvar) 
-    expr = spec["expression"]
-    for v in xmod.data_vars :
-        expr = re.sub(
-            rf"\b{re.escape(v)}\b",
-            f"xmod['{v}']",
-            expr
-        )
-    # ... should be a beter way than repeat this twice... 
-    for v in xmod.coords :
-        expr = re.sub(
-            rf"\b{re.escape(v)}\b",
-            f"xmod['{v}']",
-            expr
-        )
-    if verbose : print("    %s"%expr)
-    xmod[newvar] = eval(expr)
-                        
-if verbose: print("Added variables") 
+# Add YAML-defined composite variables without model-specific extractor code.
+xmod = add_derived_variables(xmod, cfg)
+if verbose and cfg.get("derived_variables"):
+    print(f"Derived variables: {list(cfg['derived_variables'])}")
 
 # Acquire coordinate dimension names 
 time_dim = cfg["coordinates"]["time"]
