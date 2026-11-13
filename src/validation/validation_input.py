@@ -153,6 +153,49 @@ def period_mask(values, periods: tuple[tuple[int, int], ...]) -> np.ndarray:
     return selected
 
 
+def _decode_configured_time(
+    dataset: xr.Dataset,
+    config: dict,
+    time_dim: str,
+) -> xr.Dataset:
+    """Decode numeric elapsed time using an origin supplied in the YAML."""
+    time_config = config.get("time_coordinate")
+    if not time_config or np.issubdtype(dataset[time_dim].dtype, np.datetime64):
+        return dataset
+
+    origin = time_config.get("origin")
+    unit = str(time_config.get("unit", "seconds")).strip().lower()
+    unit_codes = {
+        "second": "s",
+        "seconds": "s",
+        "minute": "m",
+        "minutes": "m",
+        "hour": "h",
+        "hours": "h",
+        "day": "D",
+        "days": "D",
+    }
+    if not origin:
+        raise KeyError("time_coordinate.origin is required for numeric model time")
+    if unit not in unit_codes:
+        raise ValueError(
+            "time_coordinate.unit must be seconds, minutes, hours, or days"
+        )
+
+    raw = np.asarray(dataset[time_dim].values).reshape(-1)
+    decoded = pd.Timestamp(origin) + pd.to_timedelta(raw, unit=unit_codes[unit])
+    coordinate = xr.DataArray(
+        decoded.to_numpy(dtype="datetime64[ns]"),
+        dims=dataset[time_dim].dims,
+        attrs={
+            **dataset[time_dim].attrs,
+            "codeblue_original_units": dataset[time_dim].attrs.get("units", ""),
+            "codeblue_time_origin": str(origin),
+        },
+    )
+    return dataset.assign_coords({time_dim: coordinate})
+
+
 def open_model_input(config: dict, year: int) -> OpenedModelInput:
     """Open selected model files lazily as one time-ordered dataset."""
     mode, periods, paths = input_plan(config, year)
@@ -171,6 +214,8 @@ def open_model_input(config: dict, year: int) -> OpenedModelInput:
             combine_attrs="override",
             chunks={},
         )
+
+    dataset = _decode_configured_time(dataset, config, time_dim)
 
     times = pd.DatetimeIndex(
         pd.to_datetime(
