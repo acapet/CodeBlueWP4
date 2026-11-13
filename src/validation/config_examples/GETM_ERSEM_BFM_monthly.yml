@@ -1,0 +1,61 @@
+# Example self-contained GETM/ERSEM/BFM monthly validation configuration.
+# Replace the three /path/to locations before running.
+
+model:
+  name: GETM_ERSEM_BFM
+
+coordinates:
+  time: time
+  lon: lonc
+  lat: latc
+  vertical: level
+
+vertical_coordinate:
+  method: layer_thickness
+  thickness_variable: h
+  native_order: bottom_to_surface
+  inactive_level_indices: [0]
+  positive: down
+  reference: instantaneous_surface
+  observation_reference: instantaneous_surface
+  outside_column: missing
+  missing_values: [-9998.0, -9999.0]
+
+variables:
+  oxy:
+    model_name: O2o
+    conversion: 0.0223914
+  nox:
+    model_name: N3n
+    conversion: 1
+  nh4:
+    model_name: N4n
+    conversion: 1
+  po4:
+    model_name: N1p
+    conversion: 1
+  sio:
+    model_name: N5s
+    conversion: 1
+  chl:
+    model_name: Chla
+    conversion: 1
+  temp:
+    model_name: temp
+    conversion: 1
+  sal:
+    model_name: salt
+    conversion: 1
+  talk:
+    model_name: Ac
+    conversion: 0.001
+
+input:
+  mode: monthly
+  pattern: "/path/to/model/{year}/{month:02d}/model_output.3d.nc"
+  # Omit months for January-December.
+  months: [9, 10, 11]
+
+files:
+  insitudatadir: "/path/to/ICESData_for_validation/"
+  outdir: "/path/to/validation/output/GETM_ERSEM_BFM_SON/"

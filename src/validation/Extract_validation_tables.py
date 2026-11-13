@@ -20,10 +20,9 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
-import datetime
-import yaml
 import argparse
 import re
+from pathlib import Path
 
 from vertical_handling import (
     interpolate_to_observation_depths,
@@ -31,6 +30,13 @@ from vertical_handling import (
     observation_match_diagnostics,
     prepare_vertical_coordinates,
     vertical_input_names,
+)
+from validation_input import (
+    file_sha256,
+    load_validation_config,
+    observation_paths,
+    open_model_input,
+    period_mask,
 )
 
 
@@ -70,15 +76,30 @@ modyear = args.modyear
 verbose = args.verbose
 write_match_diagnostics = args.match_diagnostics
 
-# Load model configuration 
-with open("../modelspecifics/%s.yml"%modelid) as f:
-    cfg = yaml.safe_load(f)
+# Load configuration and model data.
+config_path = Path(f"{modelid}.yml")
+if not config_path.is_file():
+    config_path = (
+        Path(__file__).resolve().parent.parent
+        / "modelspecifics"
+        / f"{modelid}.yml"
+    )
+loaded_config = load_validation_config(config_path)
+cfg = loaded_config.values
+opened_model = open_model_input(cfg, modyear)
+xmod = opened_model.dataset
 
-# Loading Model data    
-modelfile = cfg["files"]["pattern"].format(year=modyear)
-xmod = xr.open_dataset(modelfile)
-
-if verbose: print("Read model file") 
+if verbose:
+    print(f"Configuration: {loaded_config.path}")
+    print(f"Configuration SHA-256: {file_sha256(loaded_config.path)}")
+    print(f"Input mode: {opened_model.mode}")
+    print(f"Selected periods: {opened_model.periods}")
+    for path in opened_model.paths:
+        print(f"Model input: {path}")
+    print(
+        "Duplicate model timestamps removed (keep later file): "
+        f"{opened_model.duplicate_times_removed}"
+    )
 
 # Compute composite variables ###
 for newvar, spec in cfg.get("derived_variables", {}).items():
@@ -125,17 +146,18 @@ if len(model_times) == 0:
 model_time_min = model_times.min()
 model_time_max = model_times.max()
 
-# This should contain the full list of validation variables
-#TODO: interface with validation.csv .. if needed
-
-vars = ["oxy", "nox", "nh4", "po4", "sio", "chl", "temp", "sal", "talk",'ph','sec']
+# The model mapping is the authoritative list of validation variables.
+vars = list(cfg["variables"])
 match_summary_rows = []
 
 for var in vars:
-    # Shaping local in situ dataframe   
-    fname = cfg["files"]["insitudatadir"]+'%s_%s.parquet'%(var,modyear)
-    if verbose: print('reading %s'%fname)
-    dfl =pd.read_parquet(fname)
+    # Shape the local in situ dataframe from the required calendar years.
+    observation_files = observation_paths(cfg, var, opened_model.periods)
+    if verbose:
+        for path in observation_files:
+            print(f"reading {path}")
+    observation_frames = [pd.read_parquet(path) for path in observation_files]
+    dfl = pd.concat(observation_frames, ignore_index=True)
     if verbose : print(dfl.columns)
     
     required_observation_columns = {"datetime", "lon", "lat", "depth", var}
@@ -149,8 +171,8 @@ for var in vars:
         )
 
     observation_times = _utc_naive_datetime(dfl["datetime"])
-    year_mask = observation_times.dt.year == modyear
-    dyear = dfl.loc[year_mask].copy().reset_index(drop=True)
+    selected_period = period_mask(observation_times, opened_model.periods)
+    dyear = dfl.loc[selected_period].copy().reset_index(drop=True)
     dyear["_match_source_row"] = np.arange(len(dyear), dtype=np.int64)
     year_times = _utc_naive_datetime(dyear["datetime"])
 
@@ -369,3 +391,5 @@ if write_match_diagnostics:
     pd.DataFrame(match_summary_rows).to_csv(summary_name, index=False)
     if verbose:
         print(f"Saved match-status summary to {summary_name}")
+
+xmod.close()
