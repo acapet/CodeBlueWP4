@@ -422,8 +422,6 @@ def _select_nearest_s2d(
         mapped[name] = lookup[name]
 
     return mapped
-
-
 def interpolate_horizontal(
     data: xr.Dataset,
     grid_dataset: xr.Dataset,
@@ -501,5 +499,3 @@ def interpolate_horizontal(
         )
 
     return mapped
-
-

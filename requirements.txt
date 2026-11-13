@@ -1,4 +1,8 @@
 pandas
 folium
+# xESMF requires an ESMPy installation; use environment.yml when possible.
+xesmf
+pyproj
+scipy
 mkdocs
 mkdocs-material
