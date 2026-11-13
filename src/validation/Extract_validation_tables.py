@@ -37,6 +37,12 @@ from validation_input import (
     open_model_input,
     period_mask,
 )
+from horizontal_handling import (
+    horizontal_config,
+    horizontal_extent,
+    interpolate_horizontal,
+    nearest_s2d_lookup,
+)
 
 
 def _utc_naive_datetime(values):
@@ -107,17 +113,25 @@ if verbose and cfg.get("derived_variables"):
 
 # Acquire coordinate dimension names 
 time_dim = cfg["coordinates"]["time"]
-lat_dim = cfg["coordinates"]["lat"]
-lon_dim = cfg["coordinates"]["lon"]
 lev_dim = cfg["coordinates"]["vertical"]
-#dep_dim = cfg["coordinates"]["dep"]
+resolved_horizontal = horizontal_config(xmod, cfg)
+y_dim = resolved_horizontal["y_dimension"]
+x_dim = resolved_horizontal["x_dimension"]
 
-# Get model extent
-model_lon_min = float(xmod[lon_dim].min())
-model_lon_max = float(xmod[lon_dim].max())
+if verbose:
+    print(
+        "Horizontal matching: "
+        f"{resolved_horizontal['method']} "
+        f"({resolved_horizontal['topology']}, y={y_dim}, x={x_dim})"
+    )
 
-model_lat_min = float(xmod[lat_dim].min())
-model_lat_max = float(xmod[lat_dim].max())
+if resolved_horizontal["method"] == "bilinear":
+    (
+        model_lon_min,
+        model_lon_max,
+        model_lat_min,
+        model_lat_max,
+    ) = horizontal_extent(xmod, cfg)
 
 model_times = _utc_naive_datetime(
     np.asarray(xmod[time_dim].values).reshape(-1)
@@ -169,18 +183,29 @@ for var in vars:
         & np.isfinite(observation_depth.to_numpy())
         & np.isfinite(observation_value.to_numpy())
     )
-    inside_horizontal_bounds = (
-        (observation_lon >= model_lon_min)
-        & (observation_lon <= model_lon_max)
-        & (observation_lat >= model_lat_min)
-        & (observation_lat <= model_lat_max)
-    ).to_numpy()
 
-    # Preserve the original VALID-table selection: rectangular horizontal
-    # bounds followed by the legacy all-column dropna. The diagnostics sidecar
-    # retains the excluded annual observations and records why they were not
-    # candidates for model interpolation.
-    dflt = dyear.loc[inside_horizontal_bounds].dropna().copy()
+    horizontal_lookup = None
+    if resolved_horizontal["method"] == "nearest_s2d":
+        horizontal_lookup = nearest_s2d_lookup(
+            xmod,
+            cfg,
+            xr.DataArray(observation_lon.to_numpy(), dims="points"),
+            xr.DataArray(observation_lat.to_numpy(), dims="points"),
+        )
+        horizontal_accepted = horizontal_lookup[
+            "within_maximum_distance"
+        ].values.astype(bool)
+    else:
+        horizontal_accepted = (
+            (observation_lon >= model_lon_min)
+            & (observation_lon <= model_lon_max)
+            & (observation_lat >= model_lat_min)
+            & (observation_lat <= model_lat_max)
+        ).to_numpy()
+
+    # Preserve the original VALID-table selection after the configured
+    # horizontal acceptance rule, followed by the legacy all-column dropna.
+    dflt = dyear.loc[horizontal_accepted].dropna().copy()
     dflt["mod"] = np.nan
     dflt_times = _utc_naive_datetime(dflt["datetime"])
     inside_model_time = (
@@ -243,8 +268,8 @@ for var in vars:
         dimension: size
         for dimension, size in (
             (time_dim, 50),
-            (lat_dim, 100),
-            (lon_dim, 100),
+            (y_dim, 100),
+            (x_dim, 100),
             (lev_dim, -1),
         )
         if dimension in xmodv.dims
@@ -255,8 +280,21 @@ for var in vars:
     xmodv = xmodv.chunk(chunking)
 
     if not dwork.empty:
-        # First horizontal/time interpolation, to get vertical columns.
-        tmp = xmodv.interp({lon_dim:lons, lat_dim:lats, time_dim:times})
+        work_lookup = None
+        if horizontal_lookup is not None:
+            work_lookup = horizontal_lookup.isel(
+                points=xr.DataArray(dwork.index.to_numpy(), dims="points")
+            )
+
+        tmp = interpolate_horizontal(
+            xmodv,
+            xmod,
+            cfg,
+            lons,
+            lats,
+            lookup=work_lookup,
+        )
+        tmp = tmp.interp({time_dim: times})
 
         z_center, z_interface, model_bottom_depth, wet_profile = (
             prepare_vertical_coordinates(tmp, vertical_cfg, lev_dim)
@@ -279,15 +317,22 @@ for var in vars:
         audit["model_bottom_depth"] = np.nan
         audit["depth_minus_model_bottom"] = np.nan
 
+        outside_status = "outside_horizontal_bounds"
+        if horizontal_lookup is not None:
+            outside_status = "outside_maximum_distance"
+            audit["horizontal_distance_km"] = horizontal_lookup[
+                "horizontal_distance_km"
+            ].values
+
         audit.loc[~required_values_valid, "match_status"] = "invalid_observation"
         audit.loc[
-            required_values_valid & ~inside_horizontal_bounds, "match_status"
-        ] = "outside_horizontal_bounds"
+            required_values_valid & ~horizontal_accepted, "match_status"
+        ] = outside_status
 
         legacy_rows = set(dflt["_match_source_row"].to_numpy())
         excluded_by_dropna = (
             required_values_valid
-            & inside_horizontal_bounds
+            & horizontal_accepted
             & ~audit["_match_source_row"].isin(legacy_rows).to_numpy()
         )
         audit.loc[
